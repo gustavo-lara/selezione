@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { LandingPage } from './pages/LandingPage';
-import { PhotographerDashboard } from './pages/PhotographerDashboard';
-import { PublicGallery } from './pages/PublicGallery';
+import { LandingPage } from './features/landing/index.js';
+import { PhotographerDashboard } from './features/dashboard/index.js';
+import { PublicGallery } from './features/gallery/index.js';
 import { NotFoundPage } from './pages/NotFoundPage';
 
 export default function App() {
@@ -32,16 +32,16 @@ export default function App() {
       }
 
       // Rota padrão na raiz
-      const savedUser = localStorage.getItem('@pickmyshot:user');
-      const savedToken = localStorage.getItem('@pickmyshot:token');
+      const savedUser = localStorage.getItem('@studio:user');
+      const savedToken = localStorage.getItem('@studio:token');
 
       if (savedUser && savedToken) {
         try {
           setCurrentUser(JSON.parse(savedUser));
           setCurrentView('dashboard');
         } catch (e) {
-          localStorage.removeItem('@pickmyshot:user');
-          localStorage.removeItem('@pickmyshot:token');
+          localStorage.removeItem('@studio:user');
+          localStorage.removeItem('@studio:token');
           setCurrentView('landing');
         }
       } else {
@@ -69,8 +69,8 @@ export default function App() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('@pickmyshot:user');
-    localStorage.removeItem('@pickmyshot:token');
+    localStorage.removeItem('@studio:user');
+    localStorage.removeItem('@studio:token');
     setCurrentUser(null);
     setCurrentView('landing');
     window.location.hash = '';
