@@ -5,7 +5,7 @@ const samplePhotos = [
   { id: 1, tag: '#001', title: 'Sombra e Luz', url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80' },
   { id: 2, tag: '#002', title: 'Editorial Urbano', url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80' },
   { id: 3, tag: '#003', title: 'Cerimônia Natural', url: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=600&q=80' },
-  { id: 4, tag: '#004', title: 'Studio B&W', url: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=600&q=80' },
+  { id: 4, tag: '#004', title: 'Selezione B&W', url: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=600&q=80' },
 ];
 
 export function ContactSheetDemo() {

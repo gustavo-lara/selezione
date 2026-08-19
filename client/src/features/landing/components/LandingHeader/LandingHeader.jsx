@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowUpRight, Menu, X } from 'lucide-react';
 
 const NAV_LINKS = [
-  { label: 'O Studio',      href: '#o-studio' },
+  { label: 'A Selezione',      href: '#a-selezione' },
   { label: 'Como funciona', href: '#como-funciona' },
   { label: 'Para quem',     href: '#para-quem' },
 ];
@@ -91,7 +91,7 @@ export function LandingHeader({ onLogin, onRegister }) {
               userSelect: 'none',
             }}
           >
-            Studio
+            Selezione
           </span>
           <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: T.slash, transition }}>
             /
@@ -308,7 +308,7 @@ export function LandingHeader({ onLogin, onRegister }) {
                 <ArrowUpRight size={18} strokeWidth={1.8} />
               </button>
 
-              {/* Entrar no Studio — ghost serif */}
+              {/* Entrar na Selezione — ghost serif */}
               <button
                 onClick={() => { onLogin(); setMenuOpen(false); }}
                 style={{
@@ -330,7 +330,7 @@ export function LandingHeader({ onLogin, onRegister }) {
                   justifyContent: 'space-between',
                 }}
               >
-                <span>Entrar no Studio</span>
+                <span>Entrar na Selezione</span>
                 <ArrowUpRight size={16} strokeWidth={1.8} color="var(--color-mark-red)" />
               </button>
             </div>

@@ -120,7 +120,7 @@ export function CTASection({ onRegister }) {
               letterSpacing: '-0.02em',
             }}
           >
-            Studio,{' '}
+            Selezione,{' '}
           </span>
           <span
             style={{

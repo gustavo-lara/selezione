@@ -26,7 +26,7 @@ export function WhatIsSection() {
   return (
     <section
       ref={ref}
-      id="o-studio"
+      id="a-selezione"
       style={{
         /* z-index 2 garante que desliza por cima do hero sticky */
         position: 'relative',
@@ -52,7 +52,7 @@ export function WhatIsSection() {
             <div style={{ width: '2px', height: '100%', minHeight: '80px', backgroundColor: 'var(--color-mark-red)', flexShrink: 0, opacity: 0.7 }} />
             <div>
               <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--color-warm-grey)', display: 'block', marginBottom: '1rem' }}>
-                O Studio
+                A Selezione
               </span>
               <p
                 style={{
