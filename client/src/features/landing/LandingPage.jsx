@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { LandingHeader } from './components/LandingHeader/LandingHeader.jsx';
 import { HeroSection } from './components/HeroSection/HeroSection.jsx';
-import { ContactSheetDemo } from './components/ContactSheetDemo/ContactSheetDemo.jsx';
+import { WhatIsSection } from './components/WhatIsSection/WhatIsSection.jsx';
 import { HowItWorksSection } from './components/HowItWorksSection/HowItWorksSection.jsx';
+import { ForWhoSection } from './components/ForWhoSection/ForWhoSection.jsx';
+import { ContactSheetDemo } from './components/ContactSheetDemo/ContactSheetDemo.jsx';
+import { CTASection } from './components/CTASection/CTASection.jsx';
 import { LandingFooter } from './components/LandingFooter/LandingFooter.jsx';
 import { AuthModal } from '../auth/components/AuthModal/AuthModal.jsx';
 
@@ -16,21 +19,38 @@ export function LandingPage({ onLoginSuccess }) {
   };
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: 'var(--color-paper)', color: 'var(--color-ink)' }}>
+    <div style={{ backgroundColor: 'var(--color-paper)', color: 'var(--color-ink)' }}>
+      {/* Header fixo — flutua sobre tudo */}
       <LandingHeader
         onLogin={() => openAuth('login')}
         onRegister={() => openAuth('register')}
       />
 
-      {/* Hero Section */}
-      <section style={{ padding: '2.5rem 1rem 3.5rem', maxWidth: '1200px', margin: '0 auto' }}>
+      {/* ── Hero sticky: fica fixo enquanto as seções sobem por cima ── */}
+      <div style={{ position: 'sticky', top: 0, height: '100vh', zIndex: 1 }}>
         <HeroSection onRegister={() => openAuth('register')} />
+      </div>
+
+      {/* ── Conteúdo deslizante: z-index 2 → cobre o hero ao scrollar ── */}
+      <div style={{ position: 'relative', zIndex: 2 }}>
+        {/* 2. O QUE É */}
+        <WhatIsSection />
+
+        {/* 3. COMO FUNCIONA */}
+        <div id="como-funciona"><HowItWorksSection /></div>
+
+        {/* 4. PARA QUEM */}
+        <div id="para-quem"><ForWhoSection /></div>
+
+        {/* 5. DEMO */}
         <ContactSheetDemo />
-      </section>
 
-      <HowItWorksSection />
+        {/* 6. CTA FINAL */}
+        <CTASection onRegister={() => openAuth('register')} />
 
-      <LandingFooter />
+        {/* 7. FOOTER */}
+        <LandingFooter />
+      </div>
 
       {/* Modal de Autenticação */}
       <AuthModal

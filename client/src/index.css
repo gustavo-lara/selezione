@@ -5,8 +5,10 @@
   --color-paper-muted: #EFECE6;
   --color-ink: #1A1815;
   --color-ink-muted: #3D3935;
-  --color-mark-red: #C13B2E;
-  --color-mark-red-hover: #A52F23;
+  --color-mark-red: #8A1810;
+  --color-mark-red-hover: #6D1208;
+  --color-mark-red-deep: #4A0B06;
+  --color-mark-red-light: #B02418;
   --color-warm-grey: #8A8578;
   --color-warm-grey-light: #D9D5CC;
   --color-film-beige: #D4C9A8;
@@ -20,6 +22,137 @@
   --border-print: 1px solid var(--color-warm-grey-light);
   --border-dark: 1px solid var(--color-ink);
 }
+
+/* ============================================================
+   KEYFRAME ANIMATIONS
+   ============================================================ */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-32px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(32px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes drawCircle {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes pulseRed {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.6; }
+}
+
+@keyframes toastSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes lineGrow {
+  from { transform: scaleY(0); }
+  to   { transform: scaleY(1); }
+}
+
+/* ============================================================
+   ANIMATION UTILITY CLASSES
+   ============================================================ */
+
+.animate-fade-up {
+  animation: fadeInUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease both;
+}
+
+.animate-slide-left {
+  animation: slideInLeft 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-slide-right {
+  animation: slideInRight 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Intersection Observer — initial hidden state */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-28px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-left.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.reveal-right {
+  opacity: 0;
+  transform: translateX(28px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-right.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Animation delay utilities */
+.delay-100 { transition-delay: 0.1s; animation-delay: 0.1s; }
+.delay-200 { transition-delay: 0.2s; animation-delay: 0.2s; }
+.delay-300 { transition-delay: 0.3s; animation-delay: 0.3s; }
+.delay-400 { transition-delay: 0.4s; animation-delay: 0.4s; }
+.delay-500 { transition-delay: 0.5s; animation-delay: 0.5s; }
 
 * {
   box-sizing: border-box;
