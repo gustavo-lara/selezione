@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 350 120" width="350" height="120">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Alex+Brush&display=swap');
+      .logo-text {
+        font-family: 'Alex Brush', cursive;
+        font-size: 72px;
+        fill: #1A1815; /* Cor escura do tema (Ink) */
+        text-anchor: middle;
+        dominant-baseline: middle;
+      }
+    </style>
+  </defs>
+  <text x="50%" y="55%" class="logo-text">Selezione</text>
+</svg>

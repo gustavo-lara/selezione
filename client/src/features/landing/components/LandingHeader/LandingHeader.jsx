@@ -77,18 +77,17 @@ export function LandingHeader({ onLogin, onRegister }) {
         }}
       >
         {/* ── WORDMARK ── */}
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.55rem', flexShrink: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexShrink: 0 }}>
           <span
             style={{
-              fontFamily: 'var(--font-serif)',
-              fontStyle: 'italic',
-              fontSize: '1.3rem',
-              fontWeight: 600,
-              letterSpacing: '-0.03em',
+              fontFamily: "'Alex Brush', cursive",
+              fontSize: '2rem', /* Maior por ser cursiva */
+              fontWeight: 400,
               lineHeight: 1,
               color: T.fg,
               transition,
               userSelect: 'none',
+              transform: 'translateY(-2px)' /* Ajuste fino de alinhamento */
             }}
           >
             Selezione

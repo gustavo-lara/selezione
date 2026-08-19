@@ -11,7 +11,14 @@ export function LandingFooter() {
       color: 'var(--color-warm-grey)'
     }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-        <span style={{ fontFamily: 'var(--font-serif)', fontSize: '1.1rem', color: 'var(--color-ink)', fontWeight: 600 }}>
+        <span
+          style={{
+            fontFamily: "'Alex Brush', cursive",
+            fontSize: '2rem',
+            color: 'var(--color-ink)',
+            lineHeight: 1
+          }}
+        >
           Selezione
         </span>
         <span style={{ fontSize: '0.75rem', color: 'var(--color-warm-grey)' }}>

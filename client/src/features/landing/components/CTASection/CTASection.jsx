@@ -113,11 +113,11 @@ export function CTASection({ onRegister }) {
         >
           <span
             style={{
-              fontFamily: 'var(--font-serif)',
-              fontSize: '1.6rem',
-              fontWeight: 600,
+              fontFamily: "'Alex Brush', cursive",
+              fontSize: '2.5rem',
+              fontWeight: 400,
               color: 'rgba(247, 245, 240, 0.35)',
-              letterSpacing: '-0.02em',
+              letterSpacing: '0',
             }}
           >
             Selezione,{' '}
