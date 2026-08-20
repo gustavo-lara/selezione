@@ -1,34 +1,18 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Send, MousePointer } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
+import { Send, MousePointer2 } from 'lucide-react';
 
 const samplePhotos = [
-  { id: 1, tag: '#001', title: 'Sombra e Luz', url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80' },
-  { id: 2, tag: '#002', title: 'Editorial Urbano', url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80' },
-  { id: 3, tag: '#003', title: 'Cerimônia Natural', url: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=600&q=80' },
-  { id: 4, tag: '#004', title: 'Selezione B&W', url: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=600&q=80' },
+  { id: 1, tag: '001', title: 'Retrato Clássico', url: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=600&q=80' },
+  { id: 2, tag: '002', title: 'Editorial Urbano', url: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=600&q=80' },
+  { id: 3, tag: '003', title: 'Luz Natural', url: 'https://images.unsplash.com/photo-1532453288672-3a27e9be9efd?auto=format&fit=crop&w=600&q=80' },
+  { id: 4, tag: '004', title: 'Selezione B&W', url: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=600&q=80' },
 ];
 
 export function ContactSheetDemo() {
   const [selectedFrames, setSelectedFrames] = useState([1, 3]);
   const [showToast, setShowToast] = useState(false);
-  const [toastSent, setToastSent] = useState(false);
   const ref = useRef(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-    const elements = ref.current?.querySelectorAll('.reveal');
-    elements?.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-  }, []);
 
   const toggleFrame = (id) => {
     if (selectedFrames.includes(id)) {
@@ -40,190 +24,230 @@ export function ContactSheetDemo() {
 
   const handleSend = () => {
     if (selectedFrames.length === 0) return;
-    setToastSent(true);
     setShowToast(true);
-    setTimeout(() => setShowToast(false), 3000);
+    setTimeout(() => setShowToast(false), 3500);
+  };
+
+  // Animação em cascata para as fotos
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.15, delayChildren: 0.3 }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
   };
 
   return (
     <section
       ref={ref}
       style={{
-        backgroundColor: 'var(--color-paper-muted)',
-        borderTop: '1px solid var(--color-warm-grey-light)',
-        borderBottom: '1px solid var(--color-warm-grey-light)',
-        padding: '6rem 1.5rem',
+        backgroundColor: '#F3F1EC', // Fundo bem claro, quase papel
+        padding: 'clamp(6rem, 10vw, 9rem) clamp(1.5rem, 5vw, 4rem)',
+        marginTop: '-3rem',
+        borderTopLeftRadius: '3rem',
+        borderTopRightRadius: '3rem',
+        position: 'relative',
+        zIndex: 10,
+        boxShadow: '0 -20px 50px rgba(26, 24, 21, 0.08)',
       }}
     >
       <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-        {/* Header contextual */}
-        <div className="reveal" style={{ textAlign: 'center', marginBottom: '3rem' }}>
-          <span
+        
+        {/* ── Header Contextual ── */}
+        <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+          <motion.span
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-50px' }}
+            transition={{ duration: 0.8 }}
             style={{
-              fontFamily: 'var(--font-mono)',
-              fontSize: '0.72rem',
-              textTransform: 'uppercase',
-              letterSpacing: '0.12em',
+              fontFamily: 'var(--font-serif)',
+              fontStyle: 'italic',
+              fontSize: '1.25rem',
               color: 'var(--color-warm-grey)',
-              fontWeight: 600,
+              marginBottom: '1rem',
+              display: 'block'
             }}
           >
             Demonstração Interativa
-          </span>
-          <h2
+          </motion.span>
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-50px' }}
+            transition={{ duration: 1, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
             style={{
               fontFamily: 'var(--font-serif)',
-              fontSize: 'clamp(1.8rem, 4vw, 2.6rem)',
-              fontWeight: 600,
-              marginTop: '0.5rem',
+              fontSize: 'clamp(2rem, 4vw, 3.2rem)',
+              fontWeight: 400,
               color: 'var(--color-ink)',
               lineHeight: 1.15,
             }}
           >
             É assim que o cliente experimenta.
-          </h2>
-          <p
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true, margin: '-50px' }}
+            transition={{ duration: 1, delay: 0.3 }}
             style={{
-              marginTop: '0.85rem',
-              color: 'var(--color-warm-grey)',
-              fontSize: '0.95rem',
+              marginTop: '1.2rem',
+              color: 'var(--color-ink-muted)',
+              fontSize: '1.05rem',
               maxWidth: '480px',
-              margin: '0.85rem auto 0',
+              margin: '1.2rem auto 0',
               lineHeight: 1.6,
             }}
           >
-            Clique nas fotos abaixo para marcar ou desmarcar. Quando terminar, clique em "Enviar Seleção".
-          </p>
+            Clique nas fotos abaixo para aprová-las. Simule a escolha do seu cliente e finalize a seleção.
+          </motion.p>
         </div>
 
-        {/* Demo card */}
-        <div
-          className="reveal"
+        {/* ── Área da Galeria (Folha de Contato) ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-50px' }}
+          transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
           style={{
             backgroundColor: '#FFFFFF',
-            border: '1px solid var(--color-ink)',
-            borderRadius: '6px',
-            padding: '1.75rem 1.5rem',
-            boxShadow: 'var(--shadow-card)',
+            borderRadius: '4px',
+            padding: 'clamp(2rem, 5vw, 3rem)',
+            boxShadow: '0 24px 60px rgba(0,0,0,0.06)',
             position: 'relative',
           }}
         >
-          {/* Cabeçalho da galeria */}
+          {/* Cabeçalho da folha de contato */}
           <div
+            className="contact-sheet-header"
             style={{
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
               flexWrap: 'wrap',
-              gap: '0.75rem',
+              gap: '1rem',
               borderBottom: '1px solid var(--color-warm-grey-light)',
-              paddingBottom: '1.1rem',
-              marginBottom: '1.5rem',
+              paddingBottom: '1.5rem',
+              marginBottom: '2.5rem',
             }}
           >
             <div>
               <span
                 style={{
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: '0.65rem',
+                  fontFamily: 'var(--font-serif)',
+                  fontStyle: 'italic',
+                  fontSize: '1.1rem',
                   color: 'var(--color-mark-red)',
-                  letterSpacing: '0.1em',
-                  textTransform: 'uppercase',
-                  fontWeight: 700,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
                 }}
               >
-                ● Galeria Ativa
+                <div style={{ width: '6px', height: '6px', backgroundColor: 'var(--color-mark-red)', borderRadius: '50%' }} />
+                Galeria Ativa
               </span>
               <h3
                 style={{
                   fontFamily: 'var(--font-serif)',
-                  fontSize: '1.2rem',
-                  marginTop: '0.2rem',
+                  fontSize: '1.5rem',
+                  marginTop: '0.4rem',
                   color: 'var(--color-ink)',
+                  fontWeight: 600,
                 }}
               >
-                Folha de Contato #35MM — Ensaio Editorial
+                Folha de Contato #35MM
               </h3>
             </div>
             <div
+              className="contact-sheet-actions"
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '1rem',
+                gap: '1.5rem',
+                flexWrap: 'wrap',
               }}
             >
               <div
                 style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  fontFamily: 'var(--font-serif)',
+                  fontStyle: 'italic',
+                  fontSize: '1.1rem',
+                  color: 'var(--color-warm-grey)',
+                }}
+              >
+                <MousePointer2 size={16} strokeWidth={1.5} />
+                Clique para marcar
+              </div>
+              <div
+                style={{
                   fontFamily: 'var(--font-mono)',
-                  fontSize: '0.8rem',
+                  fontSize: '0.75rem',
                   color: 'var(--color-ink)',
                   fontWeight: 600,
                   backgroundColor: 'var(--color-paper-muted)',
                   border: '1px solid var(--color-warm-grey-light)',
-                  padding: '0.4rem 0.75rem',
-                  borderRadius: '4px',
+                  padding: '0.5rem 1rem',
+                  borderRadius: '100px',
+                  letterSpacing: '0.05em'
                 }}
               >
                 {selectedFrames.length}/{samplePhotos.length} SELECIONADAS
               </div>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.35rem',
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: '0.65rem',
-                  color: 'var(--color-warm-grey)',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.08em',
-                }}
-              >
-                <MousePointer size={12} />
-                Clique para marcar
-              </div>
             </div>
           </div>
 
-          {/* Grid de fotos */}
-          <div
-            className="gallery-grid-responsive"
+          {/* Grid de fotos com Framer Motion Stagger */}
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-50px' }}
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-              gap: '1.25rem',
+              gap: '2rem',
             }}
           >
             {samplePhotos.map((photo) => {
               const isSelected = selectedFrames.includes(photo.id);
               return (
-                <div
+                <motion.div
+                  variants={itemVariants}
                   key={photo.id}
                   onClick={() => toggleFrame(photo.id)}
-                  className={`contact-frame ${isSelected ? 'selected' : ''}`}
+                  whileHover={{ y: -4 }}
                   style={{ cursor: 'pointer', userSelect: 'none' }}
-                  title={isSelected ? 'Clique para desmarcar' : 'Clique para marcar'}
                 >
                   <div
                     style={{
                       display: 'flex',
                       justifyContent: 'space-between',
                       alignItems: 'center',
-                      marginBottom: '8px',
-                      fontFamily: 'var(--font-mono)',
-                      fontSize: '0.7rem',
-                      color: 'var(--color-warm-grey)',
-                      letterSpacing: '0.06em',
+                      marginBottom: '10px',
                     }}
                   >
-                    <span>{photo.tag}</span>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: 'var(--color-warm-grey)', letterSpacing: '0.1em' }}>
+                      Nº {photo.tag}
+                    </span>
                     <span
                       style={{
-                        color: isSelected ? 'var(--color-mark-red)' : 'var(--color-warm-grey)',
-                        fontWeight: isSelected ? 700 : 400,
-                        transition: 'color 0.2s ease',
+                        fontFamily: 'var(--font-serif)',
+                        fontStyle: 'italic',
+                        fontSize: '0.95rem',
+                        color: isSelected ? 'var(--color-mark-red)' : 'transparent',
+                        transition: 'color 0.3s ease',
                       }}
                     >
-                      {isSelected ? '✓ APROVADA' : 'NÃO MARCADA'}
+                      Aprovada
                     </span>
                   </div>
 
@@ -231,40 +255,29 @@ export function ContactSheetDemo() {
                     style={{
                       position: 'relative',
                       width: '100%',
-                      height: '260px',
+                      height: '280px',
                       overflow: 'hidden',
                       backgroundColor: 'var(--color-paper-muted)',
+                      border: isSelected ? '1px solid var(--color-mark-red)' : '1px solid transparent',
+                      transition: 'border 0.3s ease',
                     }}
                   >
-                    <img
+                    <motion.img
                       src={photo.url}
                       alt={photo.title}
+                      animate={{ 
+                        scale: isSelected ? 1.05 : 1,
+                        filter: isSelected ? 'contrast(1.05) brightness(1)' : 'contrast(1) brightness(0.85) grayscale(0.15)'
+                      }}
+                      transition={{ duration: 0.5, ease: "easeOut" }}
                       style={{
                         width: '100%',
                         height: '100%',
                         objectFit: 'cover',
-                        filter: isSelected ? 'contrast(1.06)' : 'grayscale(0.2)',
-                        transition: 'filter 0.3s ease',
                       }}
                     />
 
-                    {/* Overlay translúcido ao hover */}
-                    {!isSelected && (
-                      <div
-                        style={{
-                          position: 'absolute',
-                          inset: 0,
-                          backgroundColor: 'rgba(26, 24, 21, 0)',
-                          transition: 'background-color 0.2s ease',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                        }}
-                        className="hover-overlay"
-                      />
-                    )}
-
-                    {/* Círculo de caneta de cera vermelha */}
+                    {/* Círculo animado da caneta vermelha */}
                     {isSelected && (
                       <svg
                         style={{
@@ -278,124 +291,135 @@ export function ContactSheetDemo() {
                         viewBox="0 0 100 100"
                         preserveAspectRatio="none"
                       >
-                        <path
+                        <motion.path
                           d="M 10 15 C 30 5, 85 8, 92 25 C 98 45, 95 80, 80 90 C 65 98, 15 95, 8 75 C 2 55, 12 25, 30 12"
                           fill="none"
                           stroke="var(--color-mark-red)"
-                          strokeWidth="3.5"
+                          strokeWidth="2.5"
                           strokeLinecap="round"
-                          className="grease-pencil-circle"
+                          initial={{ pathLength: 0, opacity: 0 }}
+                          animate={{ pathLength: 1, opacity: 1 }}
+                          transition={{ duration: 0.6, ease: "easeInOut" }}
                         />
                       </svg>
                     )}
                   </div>
-
-                  <div
-                    style={{
-                      marginTop: '10px',
-                      fontSize: '0.85rem',
-                      fontWeight: 600,
-                      color: 'var(--color-ink)',
-                    }}
-                  >
-                    {photo.title}
-                  </div>
-                </div>
+                </motion.div>
               );
             })}
-          </div>
+          </motion.div>
 
-          {/* Rodapé com botão de envio */}
+          {/* ── Rodapé da Galeria ── */}
           <div
             style={{
-              marginTop: '1.75rem',
+              marginTop: '3rem',
               borderTop: '1px solid var(--color-warm-grey-light)',
-              paddingTop: '1.25rem',
+              paddingTop: '2rem',
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
               flexWrap: 'wrap',
-              gap: '1rem',
+              gap: '1.5rem',
             }}
           >
             <div
               style={{
-                fontFamily: 'var(--font-mono)',
-                fontSize: '0.72rem',
+                fontFamily: 'var(--font-serif)',
+                fontStyle: 'italic',
+                fontSize: '1.1rem',
                 color: 'var(--color-warm-grey)',
-                letterSpacing: '0.06em',
               }}
             >
               {selectedFrames.length === 0
-                ? 'NENHUMA FOTO MARCADA AINDA'
-                : `${selectedFrames.length} FOTO${selectedFrames.length > 1 ? 'S' : ''} MARCADA${selectedFrames.length > 1 ? 'S' : ''} PARA APROVAÇÃO`}
+                ? 'Nenhuma foto aprovada ainda.'
+                : `${selectedFrames.length} foto${selectedFrames.length > 1 ? 's' : ''} separada${selectedFrames.length > 1 ? 's' : ''}.`}
             </div>
 
-            <button
-              className={`btn-primary ${selectedFrames.length === 0 ? '' : ''}`}
+            <motion.button
+              whileHover={selectedFrames.length > 0 ? { scale: 1.02, backgroundColor: '#A11D15' } : {}}
+              whileTap={selectedFrames.length > 0 ? { scale: 0.98 } : {}}
               onClick={handleSend}
               style={{
-                opacity: selectedFrames.length === 0 ? 0.4 : 1,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.8rem',
+                backgroundColor: selectedFrames.length === 0 ? 'var(--color-warm-grey-light)' : 'var(--color-mark-red)',
+                color: selectedFrames.length === 0 ? 'var(--color-warm-grey)' : '#FFFFFF',
+                border: 'none',
+                padding: '0.8rem 1.8rem',
+                borderRadius: '4px',
+                fontFamily: 'var(--font-sans)',
+                fontSize: '0.95rem',
+                fontWeight: 600,
+                letterSpacing: '0.02em',
                 cursor: selectedFrames.length === 0 ? 'not-allowed' : 'pointer',
+                transition: 'background-color 0.3s ease, color 0.3s ease',
               }}
             >
-              <Send size={15} />
-              Enviar Seleção
-            </button>
+              <Send size={16} strokeWidth={2} />
+              Finalizar e Enviar
+            </motion.button>
           </div>
-        </div>
-
-        {/* Label de contexto */}
-        <div
-          style={{
-            textAlign: 'center',
-            marginTop: '1.5rem',
-            fontFamily: 'var(--font-mono)',
-            fontSize: '0.65rem',
-            color: 'var(--color-warm-grey)',
-            letterSpacing: '0.1em',
-            textTransform: 'uppercase',
-          }}
-        >
-          Esta é a tela que o seu cliente vê ao acessar o link
-        </div>
+        </motion.div>
       </div>
 
-      {/* Toast de confirmação */}
+      {/* ── Toast de Confirmação ── */}
       {showToast && (
-        <div
+        <motion.div
+          initial={{ opacity: 0, y: 50, scale: 0.9 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 20 }}
+          transition={{ type: "spring", stiffness: 300, damping: 25 }}
           style={{
             position: 'fixed',
             bottom: '2rem',
             right: '2rem',
             backgroundColor: 'var(--color-ink)',
             color: 'var(--color-paper)',
-            padding: '1rem 1.5rem',
-            borderRadius: '6px',
-            fontFamily: 'var(--font-sans)',
-            fontSize: '0.9rem',
-            fontWeight: 600,
-            boxShadow: '0 8px 24px rgba(26, 24, 21, 0.25)',
+            padding: '1.25rem 1.75rem',
+            borderRadius: '4px',
+            fontFamily: 'var(--font-serif)',
+            fontSize: '1.1rem',
+            boxShadow: '0 12px 40px rgba(0,0,0,0.2)',
             zIndex: 999,
-            animation: 'toastSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
-            borderLeft: '3px solid var(--color-mark-red)',
-            maxWidth: '320px',
+            borderLeft: '4px solid var(--color-mark-red)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.4rem'
           }}
         >
-          <div style={{ marginBottom: '0.3rem' }}>✓ Seleção enviada com sucesso!</div>
+          <div style={{ fontWeight: 600 }}>Seleção Enviada!</div>
           <div
             style={{
               fontFamily: 'var(--font-mono)',
               fontSize: '0.7rem',
               color: 'rgba(247, 245, 240, 0.6)',
-              fontWeight: 400,
               letterSpacing: '0.04em',
+              textTransform: 'uppercase'
             }}
           >
-            {selectedFrames.length} FOTO{selectedFrames.length > 1 ? 'S' : ''} APROVADA{selectedFrames.length > 1 ? 'S' : ''} · O FOTÓGRAFO FOI NOTIFICADO
+            O fotógrafo já recebeu a notificação.
           </div>
-        </div>
+        </motion.div>
       )}
+
+      <style>{`
+        @media (max-width: 480px) {
+          .contact-sheet-header {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 1.25rem !important;
+          }
+          .contact-sheet-actions {
+            width: 100%;
+            justify-content: space-between !important;
+            gap: 0.5rem !important;
+          }
+          .contact-sheet-actions > div:first-child {
+            font-size: 0.95rem !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }

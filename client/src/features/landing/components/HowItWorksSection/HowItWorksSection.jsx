@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
+import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 
 const steps = [
   {
@@ -7,7 +8,6 @@ const steps = [
     title: 'Você cria a galeria',
     description:
       'No seu painel, você cria um novo ensaio, faz o upload das fotos e a galeria já está pronta. O sistema organiza tudo automaticamente em molduras numeradas, no estilo de uma folha de contato analógica.',
-    detail: 'Suporte a múltiplos arquivos · Organização automática · Armazenamento na nuvem',
     side: 'Fotógrafo',
   },
   {
@@ -16,7 +16,6 @@ const steps = [
     title: 'O cliente acessa sem cadastro',
     description:
       'Um link exclusivo é gerado para o ensaio. Você envia pelo WhatsApp ou e-mail. O cliente clica e cai diretamente na galeria — sem precisar criar conta, instalar app ou memorizar senha.',
-    detail: 'Acesso com 1 clique · Funciona no celular · Zero atrito',
     side: 'Cliente',
   },
   {
@@ -24,228 +23,279 @@ const steps = [
     phase: 'A Decisão',
     title: 'Você recebe a lista exata',
     description:
-      'O cliente marca as fotos que quer com um clique — um círculo vermelho aparece sobre cada selecionada. Você acompanha em tempo real no painel e recebe a lista numerada, pronta para a edição final.',
-    detail: 'Seleção em tempo real · Lista numerada · Sem margem para erro',
+      'O cliente marca as fotos que quer com um clique. Você acompanha em tempo real no painel e recebe a lista numerada, pronta para a edição final.',
     side: 'Fotógrafo',
   },
 ];
 
 export function HowItWorksSection() {
-  const ref = useRef(null);
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ['start center', 'end center'],
+  });
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
+  const headerRef = useRef(null);
+  const headerInView = useInView(headerRef, { once: true, margin: '-40% 0px' });
 
-    const elements = ref.current?.querySelectorAll('.reveal, .reveal-left, .reveal-right');
-    elements?.forEach((el) => observer.observe(el));
-
-    return () => observer.disconnect();
-  }, []);
+  // A linha cronológica desce conforme o scroll
+  const lineHeight = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
 
   return (
     <section
-      ref={ref}
+      ref={containerRef}
       style={{
-        backgroundColor: '#FFFFFF',
-        borderTop: '1px solid var(--color-warm-grey-light)',
-        borderBottom: '1px solid var(--color-warm-grey-light)',
-        padding: '6rem 1.5rem',
+        backgroundColor: '#7A140F', // Um vermelho luxuoso e profundo
+        backgroundImage: 'radial-gradient(ellipse at top, #A11D15 0%, #61100C 100%)',
+        padding: 'clamp(6rem, 12vw, 10rem) clamp(1.5rem, 5vw, 4rem)',
+        position: 'relative',
+        overflow: 'hidden',
+        color: '#F7F5F0',
       }}
     >
-      <div style={{ maxWidth: '900px', margin: '0 auto' }}>
-        {/* Header */}
-        <div className="reveal" style={{ textAlign: 'center', marginBottom: '4.5rem' }}>
-          <span
-            style={{
-              fontFamily: 'var(--font-mono)',
-              fontSize: '0.72rem',
-              textTransform: 'uppercase',
-              letterSpacing: '0.12em',
-              color: 'var(--color-warm-grey)',
-              fontWeight: 600,
-            }}
-          >
-            O Fluxo de Aprovação
-          </span>
-          <h2
+      {/* ── Efeito de Flash de Câmera na Entrada ── */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={headerInView ? { opacity: [0, 1, 0, 0, 0.85, 0] } : {}}
+        transition={{ duration: 0.6, times: [0, 0.1, 0.2, 0.4, 0.5, 0.6], ease: "easeOut" }}
+        style={{
+          position: 'absolute',
+          inset: 0,
+          backgroundColor: '#FFFFFF',
+          zIndex: 50,
+          pointerEvents: 'none',
+          mixBlendMode: 'screen'
+        }}
+      />
+
+      {/* ── Animações de Fundo (Graças/Orbs) ── */}
+      <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 0 }}>
+        <motion.div
+          animate={{
+            x: ['-10%', '10%', '-10%'],
+            y: ['-10%', '20%', '-10%'],
+            scale: [1, 1.3, 1],
+          }}
+          transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
+          style={{
+            position: 'absolute',
+            top: '-10%',
+            left: '-10%',
+            width: '50vw',
+            height: '50vw',
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(255, 60, 40, 0.6) 0%, transparent 70%)',
+            filter: 'blur(60px)',
+            mixBlendMode: 'screen'
+          }}
+        />
+        <motion.div
+          animate={{
+            x: ['10%', '-20%', '10%'],
+            y: ['20%', '-10%', '20%'],
+            scale: [1, 1.4, 1],
+          }}
+          transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+          style={{
+            position: 'absolute',
+            bottom: '-10%',
+            right: '-10%',
+            width: '60vw',
+            height: '60vw',
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(255, 90, 50, 0.45) 0%, transparent 70%)',
+            filter: 'blur(70px)',
+            mixBlendMode: 'color-dodge'
+          }}
+        />
+      </div>
+
+      {/* Textura de Grain Sutil */}
+      <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0.08, pointerEvents: 'none', mixBlendMode: 'screen', zIndex: 1 }} xmlns="http://www.w3.org/2000/svg">
+        <filter id="grain-red">
+          <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
+          <feColorMatrix type="saturate" values="0" />
+        </filter>
+        <rect width="100%" height="100%" filter="url(#grain-red)" />
+      </svg>
+
+      <div style={{ maxWidth: '900px', margin: '0 auto', position: 'relative', zIndex: 2 }}>
+        {/* Header Centralizado */}
+        <div ref={headerRef} style={{ textAlign: 'center', marginBottom: '6rem' }}>
+          <motion.span
+            initial={{ opacity: 0, y: 15 }}
+            animate={headerInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8 }}
             style={{
               fontFamily: 'var(--font-serif)',
-              fontSize: 'clamp(1.8rem, 4vw, 2.8rem)',
-              fontWeight: 600,
-              marginTop: '0.5rem',
-              color: 'var(--color-ink)',
-              lineHeight: 1.15,
+              fontStyle: 'italic',
+              fontSize: '1.2rem',
+              color: 'rgba(247,245,240,0.7)',
+              fontWeight: 400,
+              display: 'block',
+              marginBottom: '1rem',
             }}
           >
-            Três momentos. Zero confusão.
-          </h2>
-          <p
+            A Ordem Cronológica
+          </motion.span>
+          <motion.h2
+            initial={{ opacity: 0, y: 25 }}
+            animate={headerInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             style={{
-              marginTop: '1rem',
-              color: 'var(--color-warm-grey)',
-              fontSize: '1rem',
-              maxWidth: '480px',
-              margin: '1rem auto 0',
-              lineHeight: 1.6,
+              fontFamily: 'var(--font-serif)',
+              fontSize: 'clamp(2.5rem, 6vw, 4.2rem)',
+              fontWeight: 600,
+              color: '#FFFFFF',
+              lineHeight: 1.1,
+              letterSpacing: '-0.02em',
             }}
           >
-            O fluxo foi desenhado para ser simples de um lado e preciso do outro.
-          </p>
+            Três momentos.<br />
+            <span style={{ fontStyle: 'italic', color: 'rgba(255,255,255,0.85)' }}>Zero atrito.</span>
+          </motion.h2>
         </div>
 
-        {/* Timeline vertical */}
-        <div style={{ position: 'relative' }}>
-          {/* Linha vertical */}
+        {/* Timeline Vertical */}
+        <div style={{ position: 'relative', paddingLeft: 'clamp(2rem, 5vw, 4rem)' }}>
+          {/* Fundo da Linha (Cinza escuro transparente) */}
           <div
             style={{
               position: 'absolute',
-              left: '2.5rem',
-              top: 0,
+              left: 'clamp(2rem, 5vw, 4rem)',
+              top: '2rem',
               bottom: 0,
               width: '1px',
-              backgroundColor: 'var(--color-warm-grey-light)',
-              transformOrigin: 'top',
+              backgroundColor: 'rgba(247,245,240,0.15)',
             }}
-            className="reveal"
+          />
+          {/* Linha Ativa Animada (Branca) */}
+          <motion.div
+            style={{
+              position: 'absolute',
+              left: 'clamp(2rem, 5vw, 4rem)',
+              top: '2rem',
+              bottom: 0,
+              width: '2px',
+              backgroundColor: '#FFFFFF',
+              height: lineHeight,
+              transformOrigin: 'top',
+              boxShadow: '0 0 10px rgba(255,255,255,0.5)',
+            }}
           />
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '3.5rem' }}>
-            {steps.map((step, i) => {
-              const delayClass = `delay-${(i + 1) * 150 > 500 ? 500 : (i + 1) * 150}`;
-              return (
-                <div
-                  key={step.number}
-                  className={`reveal-left ${delayClass}`}
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: '5rem 1fr',
-                    gap: '2rem',
-                    alignItems: 'start',
-                  }}
-                >
-                  {/* Círculo do step number */}
-                  <div style={{ display: 'flex', justifyContent: 'center', position: 'relative', zIndex: 1 }}>
-                    <div
-                      style={{
-                        width: '5rem',
-                        height: '5rem',
-                        borderRadius: '50%',
-                        backgroundColor: i === 0 ? 'var(--color-ink)' : '#FFFFFF',
-                        border: `2px solid ${i === 0 ? 'var(--color-ink)' : 'var(--color-warm-grey-light)'}`,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        flexShrink: 0,
-                      }}
-                    >
-                      <span
-                        style={{
-                          fontFamily: 'var(--font-mono)',
-                          fontSize: '1.35rem',
-                          fontWeight: 600,
-                          color: i === 0 ? 'var(--color-paper)' : 'var(--color-ink)',
-                          lineHeight: 1,
-                        }}
-                      >
-                        {step.number}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Conteúdo */}
-                  <div style={{ paddingTop: '0.75rem' }}>
-                    <div
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.75rem',
-                        marginBottom: '0.5rem',
-                        flexWrap: 'wrap',
-                      }}
-                    >
-                      <span
-                        style={{
-                          fontFamily: 'var(--font-mono)',
-                          fontSize: '0.65rem',
-                          letterSpacing: '0.12em',
-                          textTransform: 'uppercase',
-                          color: 'var(--color-mark-red)',
-                          fontWeight: 600,
-                        }}
-                      >
-                        {step.phase}
-                      </span>
-                      <span
-                        style={{
-                          fontFamily: 'var(--font-mono)',
-                          fontSize: '0.6rem',
-                          letterSpacing: '0.1em',
-                          textTransform: 'uppercase',
-                          color: 'var(--color-warm-grey)',
-                          backgroundColor: 'var(--color-paper-muted)',
-                          padding: '0.2rem 0.5rem',
-                          borderRadius: '100px',
-                          border: '1px solid var(--color-warm-grey-light)',
-                        }}
-                      >
-                        {step.side}
-                      </span>
-                    </div>
-
-                    <h3
-                      style={{
-                        fontFamily: 'var(--font-serif)',
-                        fontSize: '1.5rem',
-                        fontWeight: 600,
-                        color: 'var(--color-ink)',
-                        marginBottom: '0.75rem',
-                        lineHeight: 1.2,
-                      }}
-                    >
-                      {step.title}
-                    </h3>
-
-                    <p
-                      style={{
-                        fontSize: '0.95rem',
-                        color: 'var(--color-ink-muted)',
-                        lineHeight: 1.7,
-                        marginBottom: '1rem',
-                        maxWidth: '560px',
-                      }}
-                    >
-                      {step.description}
-                    </p>
-
-                    <div
-                      style={{
-                        fontFamily: 'var(--font-mono)',
-                        fontSize: '0.68rem',
-                        color: 'var(--color-warm-grey)',
-                        letterSpacing: '0.06em',
-                        borderTop: '1px dashed var(--color-warm-grey-light)',
-                        paddingTop: '0.75rem',
-                      }}
-                    >
-                      {step.detail}
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '5rem' }}>
+            {steps.map((step, i) => (
+              <StepItem key={step.number} step={step} index={i} />
+            ))}
           </div>
         </div>
       </div>
     </section>
+  );
+}
+
+function StepItem({ step, index }) {
+  const itemRef = useRef(null);
+  const inView = useInView(itemRef, { once: true, margin: '-20%' });
+
+  return (
+    <motion.div
+      ref={itemRef}
+      initial={{ opacity: 0, x: -20 }}
+      animate={inView ? { opacity: 1, x: 0 } : {}}
+      transition={{ duration: 0.9, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+      style={{
+        position: 'relative',
+        paddingLeft: 'clamp(2rem, 4vw, 3rem)',
+      }}
+    >
+      {/* Indicador Cronológico (Bolinha na linha) */}
+      <motion.div
+        initial={{ scale: 0, opacity: 0 }}
+        animate={inView ? { scale: 1, opacity: 1 } : {}}
+        transition={{ duration: 0.6, delay: 0.3, type: 'spring' }}
+        style={{
+          position: 'absolute',
+          left: '-5px',
+          top: '1.2rem',
+          width: '12px',
+          height: '12px',
+          borderRadius: '50%',
+          backgroundColor: '#FFFFFF',
+          boxShadow: '0 0 15px rgba(255,255,255,0.8)',
+          zIndex: 2,
+        }}
+      />
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+        {/* Metadados da Etapa */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap', marginBottom: '0.5rem' }}>
+          <span
+            style={{
+              fontFamily: 'var(--font-serif)',
+              fontSize: '1.4rem',
+              fontWeight: 400,
+              fontStyle: 'italic',
+              color: 'rgba(255,255,255,0.9)',
+            }}
+          >
+            {step.number}
+          </span>
+          <div style={{ width: '20px', height: '1px', backgroundColor: 'rgba(255,255,255,0.3)' }} />
+          <span
+            style={{
+              fontFamily: 'var(--font-serif)',
+              fontSize: '1.1rem',
+              color: 'rgba(255,255,255,0.8)',
+            }}
+          >
+            {step.phase}
+          </span>
+          <span
+            style={{
+              fontFamily: 'var(--font-serif)',
+              fontStyle: 'italic',
+              fontSize: '0.95rem',
+              color: step.side === 'Fotógrafo' ? '#1A1815' : '#FFFFFF',
+              backgroundColor: step.side === 'Fotógrafo' ? '#F7F5F0' : 'rgba(255,255,255,0.15)',
+              padding: '0.15rem 0.6rem',
+              borderRadius: '4px',
+            }}
+          >
+            Ação: {step.side}
+          </span>
+        </div>
+
+        {/* Título */}
+        <h3
+          style={{
+            fontFamily: 'var(--font-serif)',
+            fontStyle: 'italic',
+            fontSize: 'clamp(1.6rem, 3.2vw, 2.4rem)',
+            fontWeight: 400,
+            color: '#FFFFFF',
+            lineHeight: 1.2,
+          }}
+        >
+          {step.title}
+        </h3>
+
+        {/* Descrição */}
+        <p
+          style={{
+            fontSize: '1rem',
+            color: 'rgba(247,245,240,0.7)',
+            lineHeight: 1.6,
+            maxWidth: '540px',
+            marginTop: '0.5rem',
+          }}
+        >
+          {step.description}
+        </p>
+
+
+      </div>
+    </motion.div>
   );
 }

@@ -43,18 +43,16 @@ export function CTASection({ onRegister }) {
       />
 
       <div style={{ maxWidth: '680px', margin: '0 auto', position: 'relative' }}>
-        <div
-          className="reveal"
-          style={{
-            fontFamily: 'var(--font-mono)',
-            fontSize: '0.6rem',
-            letterSpacing: '0.16em',
-            textTransform: 'uppercase',
-            color: 'rgba(176, 36, 24, 0.7)',
-            marginBottom: '1.75rem',
-          }}
-        >
-          Menegassi
+        <div className="reveal" style={{ marginBottom: '1.75rem', display: 'flex', justifyContent: 'center' }}>
+          <img 
+            src="/logo.png" 
+            alt="Menegassi Logo" 
+            style={{ 
+              height: '40px',
+              width: 'auto',
+              objectFit: 'contain'
+            }} 
+          />
         </div>
 
         <h2
