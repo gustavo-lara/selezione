@@ -105,3 +105,24 @@ export const deleteFotoById = async (fotoId, fotografoId) => {
 
   return foto;
 };
+
+export const deleteFotosFromStorageByGaleriaId = async (galeriaId) => {
+  const fotos = await getFotosByGaleriaId(galeriaId);
+  
+  if (fotos && fotos.length > 0) {
+    console.log(`Iniciando exclusão de ${fotos.length} fotos da galeria ${galeriaId} no storage...`);
+    
+    // Removemos sequencialmente para não sobrecarregar a API caso sejam muitas fotos
+    for (const foto of fotos) {
+      try {
+        const urlParts = foto.url_storage.split('/storage/v1/object/public/galerias/');
+        if (urlParts.length === 2) {
+          const storageFilename = urlParts[1];
+          await supabaseStorage.deleteFile(storageFilename);
+        }
+      } catch (err) {
+        console.warn(`Aviso: Falha ao deletar foto ${foto.id} do storage:`, err.message);
+      }
+    }
+  }
+};

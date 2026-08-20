@@ -3,8 +3,10 @@ import {
   createGaleria,
   getGaleriasByFotografo,
   getGaleriaBySlug,
-  deleteGaleria
+  deleteGaleria,
+  getGaleriaById
 } from './galeria.service.js';
+import { deleteFotosFromStorageByGaleriaId } from '../fotos/foto.service.js';
 
 export const create = async (req, res) => {
   try {
@@ -62,12 +64,19 @@ export const remove = async (req, res) => {
     const { id } = req.params;
     const fotografoId = req.user.id;
 
-    const deleted = await deleteGaleria(id, fotografoId);
-    if (!deleted) {
+    // Verifica se a galeria existe e pertence ao fotógrafo logado
+    const galeria = await getGaleriaById(id, fotografoId);
+    if (!galeria) {
       return res.status(404).json({ error: 'Galeria não encontrada ou sem permissão para exclusão' });
     }
 
-    return res.status(200).json({ message: 'Galeria excluída com sucesso' });
+    // 1. Deletar as fotos físicas do bucket do Supabase
+    await deleteFotosFromStorageByGaleriaId(id);
+
+    // 2. Deletar a galeria do banco (As fotos no banco serão removidas via ON DELETE CASCADE)
+    await deleteGaleria(id, fotografoId);
+
+    return res.status(200).json({ message: 'Galeria e todas as suas fotos foram excluídas com sucesso' });
   } catch (error) {
     console.error('Erro ao excluir galeria:', error);
     return res.status(500).json({ error: 'Erro interno ao excluir galeria' });

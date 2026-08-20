@@ -1,0 +1,70 @@
+.btn-primary {
+  background-color: var(--color-ink);
+  color: var(--color-paper);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.85rem 1.6rem;
+  border: 1px solid var(--color-ink);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.btn-primary:hover {
+  background-color: #2D2924;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(26, 24, 21, 0.15);
+}
+
+.btn-mark {
+  background-color: var(--color-mark-red);
+  color: #FFFFFF;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.85rem 1.6rem;
+  border: 1px solid var(--color-mark-red);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.btn-mark:hover {
+  background-color: var(--color-mark-red-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(193, 59, 46, 0.25);
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.85rem 1.6rem;
+  border: 1px solid var(--color-ink);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.btn-outline:hover {
+  background-color: var(--color-paper-muted);
+}

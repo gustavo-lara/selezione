@@ -1,0 +1,32 @@
+.contact-frame {
+  background-color: #FFFFFF;
+  border: 1px solid var(--color-warm-grey-light);
+  padding: 12px;
+  position: relative;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 2px;
+  max-width: 100%;
+}
+
+.contact-frame:hover {
+  border-color: var(--color-ink);
+  box-shadow: var(--shadow-card);
+  transform: translateY(-2px);
+}
+
+.contact-frame.selected {
+  border-color: var(--color-mark-red);
+}
+
+.header-responsive {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.header-actions-responsive {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}

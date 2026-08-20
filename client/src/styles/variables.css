@@ -1,0 +1,22 @@
+:root {
+  --color-paper: #F7F5F0;
+  --color-paper-muted: #EFECE6;
+  --color-ink: #1A1815;
+  --color-ink-muted: #3D3935;
+  --color-mark-red: #8A1810;
+  --color-mark-red-hover: #6D1208;
+  --color-mark-red-deep: #4A0B06;
+  --color-mark-red-light: #B02418;
+  --color-warm-grey: #8A8578;
+  --color-warm-grey-light: #D9D5CC;
+  --color-film-beige: #D4C9A8;
+
+  --font-serif: 'Fraunces', Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+
+  --shadow-paper: 0 4px 20px rgba(26, 24, 21, 0.06);
+  --shadow-card: 0 10px 30px rgba(26, 24, 21, 0.08);
+  --border-print: 1px solid var(--color-warm-grey-light);
+  --border-dark: 1px solid var(--color-ink);
+}

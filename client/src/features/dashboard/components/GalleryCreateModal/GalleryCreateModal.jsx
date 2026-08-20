@@ -28,7 +28,7 @@ export function GalleryCreateModal({ isOpen, novoNome, creating, onChange, onSub
             <input
               type="text"
               required
-              placeholder="Ex: Casamento Gustavo"
+              placeholder="Ex: Casamento Cliente"
               value={novoNome}
               onChange={onChange}
               style={{

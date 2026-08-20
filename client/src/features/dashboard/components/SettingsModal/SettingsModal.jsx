@@ -29,7 +29,7 @@ export function SettingsModal({ isOpen, studioName, saving, onChange, onSubmit, 
             <input
               type="text"
               required
-              placeholder="Ex: Studio Gustavo Lara"
+              placeholder="Ex: Meu Studio"
               value={studioName}
               onChange={onChange}
               style={{

@@ -1,0 +1,28 @@
+.font-serif {
+  font-family: var(--font-serif);
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+.font-sans {
+  font-family: var(--font-sans);
+}
+
+h1, h2, h3, .heading-serif {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  color: var(--color-ink);
+  letter-spacing: -0.02em;
+  word-break: break-word;
+}
+
+.frame-tag {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-warm-grey);
+}
