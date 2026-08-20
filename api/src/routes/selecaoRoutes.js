@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { toggleSelecao, listGaleriaSelecoes } from '../controllers/selecaoController.js';
-import { ensureAuthenticated } from '../middlewares/authMiddleware.js';
+import { ensureAuthenticated } from '../middlewares/auth.middleware.js';
 
 const router = Router();
 

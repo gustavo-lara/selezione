@@ -5,7 +5,7 @@ import {
   getPublicBySlug,
   remove
 } from '../controllers/galeriaController.js';
-import { ensureAuthenticated } from '../middlewares/authMiddleware.js';
+import { ensureAuthenticated } from '../middlewares/auth.middleware.js';
 
 const router = Router();
 

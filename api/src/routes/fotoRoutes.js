@@ -5,8 +5,8 @@ import {
   listMyGaleriaFotos,
   removeFoto
 } from '../controllers/fotoController.js';
-import { ensureAuthenticated } from '../middlewares/authMiddleware.js';
-import { upload } from '../middlewares/uploadMiddleware.js';
+import { ensureAuthenticated } from '../middlewares/auth.middleware.js';
+import { upload } from '../middlewares/upload.middleware.js';
 
 const router = Router();
 
