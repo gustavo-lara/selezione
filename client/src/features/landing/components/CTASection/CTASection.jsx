@@ -1,136 +1,143 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
+import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 
 export function CTASection({ onRegister }) {
   const ref = useRef(null);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-          }
-        });
-      },
-      { threshold: 0.15 }
-    );
-    const elements = ref.current?.querySelectorAll('.reveal');
-    elements?.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-  }, []);
+  // Background aura animation
+  const orbVariants = {
+    animate: {
+      rotate: 360,
+      scale: [1, 1.2, 1],
+      transition: {
+        rotate: { duration: 30, repeat: Infinity, ease: "linear" },
+        scale: { duration: 15, repeat: Infinity, ease: "easeInOut" }
+      }
+    }
+  };
 
   return (
     <section
       ref={ref}
       style={{
         backgroundColor: 'var(--color-ink)',
-        padding: '7rem 1.5rem',
+        padding: 'clamp(8rem, 15vw, 12rem) 1.5rem',
         textAlign: 'center',
         position: 'relative',
         overflow: 'hidden',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '600px'
       }}
     >
-      {/* Textura de fundo sutil */}
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          backgroundImage:
-            'radial-gradient(ellipse at 25% 75%, rgba(138, 24, 16, 0.12) 0%, transparent 55%), radial-gradient(ellipse at 75% 25%, rgba(212, 201, 168, 0.04) 0%, transparent 50%)',
-          pointerEvents: 'none',
-        }}
-      />
+      {/* ── Luzes de Ateliê (Background Aura) ── */}
+      <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 0 }}>
+        <motion.div
+          variants={orbVariants}
+          animate="animate"
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            width: '120vw',
+            height: '60vw',
+            marginTop: '-30vw',
+            marginLeft: '-60vw',
+            background: 'radial-gradient(ellipse, rgba(168, 30, 18, 0.15) 0%, rgba(212, 201, 168, 0.05) 40%, transparent 70%)',
+            filter: 'blur(80px)',
+            mixBlendMode: 'screen'
+          }}
+        />
+      </div>
 
-      <div style={{ maxWidth: '680px', margin: '0 auto', position: 'relative' }}>
-        <div className="reveal" style={{ marginBottom: '1.75rem', display: 'flex', justifyContent: 'center' }}>
-          <img 
-            src="/logo.png" 
-            alt="Menegassi Logo" 
-            style={{ 
-              height: '40px',
-              width: 'auto',
-              objectFit: 'contain'
-            }} 
-          />
-        </div>
 
-        <h2
-          className="reveal delay-100"
+
+      {/* ── Conteúdo da CTA ── */}
+      <div style={{ maxWidth: '800px', margin: '0 auto', position: 'relative', zIndex: 10 }}>
+        
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: 0.8 }}
+          style={{
+             fontFamily: 'var(--font-serif)',
+             fontStyle: 'italic',
+             fontSize: '1.25rem',
+             color: 'var(--color-mark-red)',
+             marginBottom: '1rem'
+          }}
+        >
+          O Seu Novo Padrão
+        </motion.div>
+
+        <motion.h2
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-100px' }}
+          transition={{ duration: 1, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
           style={{
             fontFamily: 'var(--font-serif)',
-            fontStyle: 'italic',
-            fontSize: 'clamp(2.2rem, 5.5vw, 3.8rem)',
-            fontWeight: 600,
+            fontSize: 'clamp(2.5rem, 6vw, 4.5rem)',
+            fontWeight: 400,
             color: '#FFFFFF',
             lineHeight: 1.1,
-            letterSpacing: '-0.03em',
-            marginBottom: '1.25rem',
+            letterSpacing: '-0.02em',
+            marginBottom: '3rem',
           }}
         >
           A precisão de um ateliê.
           <br />
-          <span style={{ color: 'var(--color-film-beige)', opacity: 0.7 }}>Na palma da mão.</span>
-        </h2>
+          <motion.span 
+             initial={{ opacity: 0, filter: 'blur(10px)' }}
+             whileInView={{ opacity: 1, filter: 'blur(0px)' }}
+             viewport={{ once: true, margin: '-100px' }}
+             transition={{ duration: 1.2, delay: 0.5 }}
+             style={{ color: 'var(--color-film-beige)', fontStyle: 'italic', display: 'inline-block', marginTop: '0.2em' }}
+          >
+             Na palma da mão.
+          </motion.span>
+        </motion.h2>
 
-        <div className="reveal delay-200" style={{ display: 'flex', justifyContent: 'center', marginTop: '0.5rem' }}>
-          <button
+        <motion.div 
+           initial={{ opacity: 0, y: 20 }}
+           whileInView={{ opacity: 1, y: 0 }}
+           viewport={{ once: true, margin: '-100px' }}
+           transition={{ duration: 0.8, delay: 0.4 }}
+           style={{ display: 'flex', justifyContent: 'center' }}
+        >
+          <motion.button
+            whileHover={{ scale: 1.03, backgroundColor: 'rgba(255,255,255,0.08)', borderColor: 'rgba(255,255,255,0.8)' }}
+            whileTap={{ scale: 0.97 }}
             onClick={onRegister}
             style={{
               backgroundColor: 'transparent',
               color: '#FFFFFF',
               fontFamily: 'var(--font-sans)',
               fontWeight: 600,
-              fontSize: '0.9rem',
-              padding: '0.85rem 2rem',
+              fontSize: '0.95rem',
+              padding: '1.25rem 3.5rem',
               border: '1px solid rgba(255,255,255,0.3)',
               borderRadius: '100px',
               cursor: 'pointer',
               display: 'inline-flex',
               alignItems: 'center',
-              gap: '0.5rem',
-              letterSpacing: '0.02em',
-              transition: 'background-color 0.25s ease, border-color 0.25s ease',
+              gap: '0.8rem',
+              letterSpacing: '0.04em',
+              textTransform: 'uppercase',
+              transition: 'all 0.3s ease',
+              boxShadow: '0 0 30px rgba(255,255,255,0.0)',
             }}
-            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.6)'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.3)'; }}
+            onMouseEnter={(e) => e.currentTarget.style.boxShadow = '0 0 60px rgba(212, 201, 168, 0.15)'}
+            onMouseLeave={(e) => e.currentTarget.style.boxShadow = '0 0 30px rgba(255,255,255,0.0)'}
           >
-            Criar galeria
-            <ArrowRight size={16} />
-          </button>
-        </div>
+            Criar Minha Primeira Galeria
+            <ArrowRight size={18} strokeWidth={2} />
+          </motion.button>
+        </motion.div>
 
-        {/* Assinatura */}
-        <div
-          className="reveal delay-400"
-          style={{
-            marginTop: '4rem',
-            paddingTop: '2.5rem',
-            borderTop: '1px solid rgba(247, 245, 240, 0.08)',
-          }}
-        >
-          <span
-            style={{
-              fontFamily: "'Alex Brush', cursive",
-              fontSize: '2.5rem',
-              fontWeight: 400,
-              color: 'rgba(247, 245, 240, 0.35)',
-              letterSpacing: '0',
-            }}
-          >
-            Selezione,{' '}
-          </span>
-          <span
-            style={{
-              fontFamily: 'var(--font-mono)',
-              fontSize: '0.75rem',
-              color: 'rgba(247, 245, 240, 0.2)',
-              letterSpacing: '0.1em',
-            }}
-          >
-            by Menegassi
-          </span>
-        </div>
       </div>
     </section>
   );
