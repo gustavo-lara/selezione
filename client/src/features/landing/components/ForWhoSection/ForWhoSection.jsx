@@ -227,7 +227,7 @@ export function ForWhoSection() {
                 marginBottom: '4rem',
               }}
             >
-              Seu cliente não precisa criar conta, instalar nada ou lembrar de senhas. Ele recebe o link e já está dentro da galeria, num ambiente limpo, focado só nas fotos.
+              Seu cliente não precisa criar conta ou instalar nada. Ele recebe o link e já está dentro da galeria, num ambiente limpo, focado só nas fotos.
             </motion.p>
 
             <BenefitList items={clientBenefits} isDark={false} />

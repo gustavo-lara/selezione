@@ -15,7 +15,7 @@ const steps = [
     phase: 'O Convite',
     title: 'O cliente acessa sem cadastro',
     description:
-      'Um link exclusivo é gerado para o ensaio. Você envia pelo WhatsApp ou e-mail. O cliente clica e cai diretamente na galeria — sem precisar criar conta, instalar app ou memorizar senha.',
+      'Um link exclusivo é gerado para o ensaio. Você envia pelo WhatsApp ou e-mail. O cliente clica e cai diretamente na galeria — sem precisar criar conta ou instalar app.',
     side: 'Cliente',
   },
   {
