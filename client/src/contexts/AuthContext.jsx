@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { LoadingScreen } from '../components/LoadingScreen/LoadingScreen';
 
 const AuthContext = createContext(null);
 
@@ -34,7 +35,7 @@ export function AuthProvider({ children }) {
   };
 
   if (loading) {
-    return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', backgroundColor: 'var(--color-paper)' }}>Carregando...</div>;
+    return <LoadingScreen message="Verificando sessão..." />;
   }
 
   return (
