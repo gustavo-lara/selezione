@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { X, ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { http } from '../../../../services/http.js';
+import { useAuth } from '../../../../contexts/AuthContext.jsx';
 
 export function AuthModal({ isOpen, onClose, onSuccess, initialMode = 'login' }) {
+  const { login } = useAuth();
   const [isLogin, setIsLogin] = useState(initialMode === 'login');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -49,10 +51,9 @@ export function AuthModal({ isOpen, onClose, onSuccess, initialMode = 'login' })
       const response = await http.post(endpoint, payload);
       const { token, user } = response.data;
 
-      localStorage.setItem('@studio:token', token);
-      localStorage.setItem('@studio:user', JSON.stringify(user));
+      login(user, token);
 
-      onSuccess(user);
+      if (onSuccess) onSuccess(user);
       onClose();
     } catch (err) {
       console.error('Erro na autenticação:', err);

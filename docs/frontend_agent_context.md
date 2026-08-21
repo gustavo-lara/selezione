@@ -7,11 +7,13 @@ Este documento serve como guia para agentes de IA que trabalham na parte do fron
 Para manter a organização e o padrão do projeto, os agentes de IA devem respeitar a seguinte arquitetura:
 
 *   **`assets/`**: Arquivos estáticos como imagens, ícones e fontes que são importados pelo código.
+*   **`components/`**: Componentes reutilizáveis e utilitários globais, como guardas de rotas (`ProtectedRoute`, etc).
+*   **`contexts/`**: Contextos do React para gerenciamento de estado global (ex: `AuthContext.jsx`).
 *   **`features/`**: Contém componentes e lógicas específicas agrupadas por funcionalidade (feature-based architecture). Componentes que pertencem exclusivamente a uma feature devem ficar aqui.
 *   **`pages/`**: Componentes que representam páginas completas ou rotas da aplicação. As páginas costumam agrupar e organizar os componentes vindos de `features`.
 *   **`services/`**: Responsável por toda a comunicação externa, principalmente chamadas à API (requests HTTP) e integrações com o backend.
 *   **`styles/`**: Arquivos de estilização globais, variáveis de CSS e configurações de design.
-*   **Arquivos na raiz do `src` (ex: `App.jsx`, `main.jsx`, `index.css`)**: Ponto de entrada da aplicação, rotas principais e estilos base.
+*   **Arquivos na raiz do `src` (ex: `App.jsx`, `main.jsx`, `index.css`)**: Ponto de entrada da aplicação, definições de rotas (`react-router-dom`) e estilos base.
 
 ## Regras para Agentes de IA
 

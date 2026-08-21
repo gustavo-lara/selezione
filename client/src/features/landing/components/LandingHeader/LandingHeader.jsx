@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowUpRight, Menu, X } from 'lucide-react';
+import { useAuth } from '../../../../contexts/AuthContext.jsx';
 
 const NAV_LINKS = [
   { label: 'A Selezione',      href: '#a-selezione' },
@@ -14,6 +15,7 @@ function scrollTo(href) {
 }
 
 export function LandingHeader({ onLogin, onRegister }) {
+  const { currentUser, logout } = useAuth();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -126,7 +128,7 @@ export function LandingHeader({ onLogin, onRegister }) {
           ))}
         </nav>
 
-        {/* ── AÇÕES DIREITA ── */}
+          {/* AÇÕES DIREITA */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0', flexShrink: 0 }}>
 
           {/* Separador vertical — apenas desktop */}
@@ -142,66 +144,130 @@ export function LandingHeader({ onLogin, onRegister }) {
             }}
           />
 
-          {/* Entrar — serif itálico, como um link de nav refinado */}
-          <button
-            onClick={onLogin}
-            className="header-login-desktop"
-            style={{
-              background: 'none',
-              border: 'none',
-              outline: 'none',
-              cursor: 'pointer',
-              fontFamily: 'var(--font-serif)',
-              fontStyle: 'italic',
-              fontWeight: 400,
-              fontSize: '0.9rem',
-              letterSpacing: '-0.01em',
-              color: T.navLink,
-              padding: '0.35rem 0.75rem',
-              transition,
-              whiteSpace: 'nowrap',
-            }}
-            onMouseEnter={(e) => { e.currentTarget.style.color = T.fg; }}
-            onMouseLeave={(e) => { e.currentTarget.style.color = T.navLink; }}
-          >
-            Entrar
-          </button>
+          {currentUser ? (
+            <>
+              <button
+                onClick={logout}
+                className="header-login-desktop"
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  outline: 'none',
+                  cursor: 'pointer',
+                  fontFamily: 'var(--font-serif)',
+                  fontStyle: 'italic',
+                  fontWeight: 400,
+                  fontSize: '0.9rem',
+                  letterSpacing: '-0.01em',
+                  color: T.navLink,
+                  padding: '0.35rem 0.75rem',
+                  transition,
+                  whiteSpace: 'nowrap',
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = T.fg; }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = T.navLink; }}
+              >
+                Sair
+              </button>
+              <button
+                onClick={() => window.location.href = '/dashboard'}
+                className="header-cta-desktop"
+                style={{
+                  fontFamily: 'var(--font-serif)',
+                  fontStyle: 'italic',
+                  fontWeight: 400,
+                  fontSize: '0.9rem',
+                  letterSpacing: '-0.01em',
+                  padding: '0.35rem 1rem',
+                  border: `1px solid ${isLight ? 'rgba(26,24,21,0.25)' : 'rgba(255,255,255,0.25)'}`,
+                  borderRadius: '100px',
+                  backgroundColor: isLight ? 'rgba(26,24,21,0.03)' : 'rgba(255,255,255,0.05)',
+                  color: T.fg,
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                  whiteSpace: 'nowrap',
+                  outline: 'none',
+                  transition,
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = isLight ? 'rgba(26,24,21,0.08)' : 'rgba(255,255,255,0.12)';
+                  e.currentTarget.style.borderColor = isLight ? 'rgba(26,24,21,0.4)' : 'rgba(255,255,255,0.4)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = isLight ? 'rgba(26,24,21,0.03)' : 'rgba(255,255,255,0.05)';
+                  e.currentTarget.style.borderColor = isLight ? 'rgba(26,24,21,0.25)' : 'rgba(255,255,255,0.25)';
+                }}
+              >
+                Acessar Painel 
+                <span style={{ fontSize: '0.75rem', marginTop: '0.1rem', opacity: 0.8 }}>↗</span>
+              </button>
+            </>
+          ) : (
+            <>
+              {/* Entrar — serif itálico, como um link de nav refinado */}
+              <button
+                onClick={onLogin}
+                className="header-login-desktop"
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  outline: 'none',
+                  cursor: 'pointer',
+                  fontFamily: 'var(--font-serif)',
+                  fontStyle: 'italic',
+                  fontWeight: 400,
+                  fontSize: '0.9rem',
+                  letterSpacing: '-0.01em',
+                  color: T.navLink,
+                  padding: '0.35rem 0.75rem',
+                  transition,
+                  whiteSpace: 'nowrap',
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = T.fg; }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = T.navLink; }}
+              >
+                Entrar
+              </button>
 
-          {/* Criar galeria — ghost pill refinada (oculta no mobile junto ao hamburger) */}
-          <button
-            onClick={onRegister}
-            className="header-cta-desktop"
-            style={{
-              fontFamily: 'var(--font-serif)',
-              fontStyle: 'italic',
-              fontWeight: 400,
-              fontSize: '0.9rem',
-              letterSpacing: '-0.01em',
-              padding: '0.35rem 1rem',
-              border: `1px solid ${isLight ? 'rgba(26,24,21,0.25)' : 'rgba(255,255,255,0.25)'}`,
-              borderRadius: '100px',
-              backgroundColor: isLight ? 'rgba(26,24,21,0.03)' : 'rgba(255,255,255,0.05)',
-              color: T.fg,
-              cursor: 'pointer',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.35rem',
-              whiteSpace: 'nowrap',
-              outline: 'none',
-              transition,
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = isLight ? 'rgba(26,24,21,0.08)' : 'rgba(255,255,255,0.12)';
-              e.currentTarget.style.borderColor = isLight ? 'rgba(26,24,21,0.4)' : 'rgba(255,255,255,0.4)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = isLight ? 'rgba(26,24,21,0.03)' : 'rgba(255,255,255,0.05)';
-              e.currentTarget.style.borderColor = isLight ? 'rgba(26,24,21,0.25)' : 'rgba(255,255,255,0.25)';
-            }}
-          >
-            Criar galeria 
-            <span style={{ fontSize: '0.75rem', marginTop: '0.1rem', opacity: 0.8 }}>↗</span>
-          </button>
+              {/* Criar galeria — ghost pill refinada (oculta no mobile junto ao hamburger) */}
+              <button
+                onClick={onRegister}
+                className="header-cta-desktop"
+                style={{
+                  fontFamily: 'var(--font-serif)',
+                  fontStyle: 'italic',
+                  fontWeight: 400,
+                  fontSize: '0.9rem',
+                  letterSpacing: '-0.01em',
+                  padding: '0.35rem 1rem',
+                  border: `1px solid ${isLight ? 'rgba(26,24,21,0.25)' : 'rgba(255,255,255,0.25)'}`,
+                  borderRadius: '100px',
+                  backgroundColor: isLight ? 'rgba(26,24,21,0.03)' : 'rgba(255,255,255,0.05)',
+                  color: T.fg,
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                  whiteSpace: 'nowrap',
+                  outline: 'none',
+                  transition,
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = isLight ? 'rgba(26,24,21,0.08)' : 'rgba(255,255,255,0.12)';
+                  e.currentTarget.style.borderColor = isLight ? 'rgba(26,24,21,0.4)' : 'rgba(255,255,255,0.4)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = isLight ? 'rgba(26,24,21,0.03)' : 'rgba(255,255,255,0.05)';
+                  e.currentTarget.style.borderColor = isLight ? 'rgba(26,24,21,0.25)' : 'rgba(255,255,255,0.25)';
+                }}
+              >
+                Criar galeria 
+                <span style={{ fontSize: '0.75rem', marginTop: '0.1rem', opacity: 0.8 }}>↗</span>
+              </button>
+            </>
+          )}
 
           {/* Hamburger — apenas < 860px */}
           <button
@@ -281,57 +347,113 @@ export function LandingHeader({ onLogin, onRegister }) {
             {/* ── Botões do menu mobile ── */}
             <div style={{ marginTop: '2rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
 
-              {/* Criar galeria — destaque total, vermelho */}
-              <button
-                onClick={() => { onRegister(); setMenuOpen(false); }}
-                style={{
-                  fontFamily: 'var(--font-serif)',
-                  fontStyle: 'italic',
-                  fontWeight: 600,
-                  fontSize: '1.1rem',
-                  letterSpacing: '-0.02em',
-                  padding: '1rem 1.5rem',
-                  border: 'none',
-                  borderRadius: '4px',
-                  backgroundColor: 'var(--color-mark-red)',
-                  color: '#F7F5F0',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  outline: 'none',
-                  width: '100%',
-                }}
-              >
-                <span>Criar galeria</span>
-                <ArrowUpRight size={18} strokeWidth={1.8} />
-              </button>
+              {currentUser ? (
+                <>
+                  <button
+                    onClick={() => { window.location.href = '/dashboard'; }}
+                    style={{
+                      fontFamily: 'var(--font-serif)',
+                      fontStyle: 'italic',
+                      fontWeight: 600,
+                      fontSize: '1.1rem',
+                      letterSpacing: '-0.02em',
+                      padding: '1rem 1.5rem',
+                      border: 'none',
+                      borderRadius: '4px',
+                      backgroundColor: 'var(--color-mark-red)',
+                      color: '#F7F5F0',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      outline: 'none',
+                      width: '100%',
+                    }}
+                  >
+                    <span>Acessar Painel</span>
+                    <ArrowUpRight size={18} strokeWidth={1.8} />
+                  </button>
 
-              {/* Entrar na Selezione — ghost serif */}
-              <button
-                onClick={() => { onLogin(); setMenuOpen(false); }}
-                style={{
-                  fontFamily: 'var(--font-serif)',
-                  fontStyle: 'italic',
-                  fontWeight: 600,
-                  fontSize: '1rem',
-                  letterSpacing: '-0.02em',
-                  padding: '0.9rem 1.5rem',
-                  border: '1px solid rgba(26,24,21,0.2)',
-                  borderRadius: '4px',
-                  backgroundColor: 'transparent',
-                  color: '#3D3935',
-                  cursor: 'pointer',
-                  outline: 'none',
-                  width: '100%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <span>Entrar na Selezione</span>
-                <ArrowUpRight size={16} strokeWidth={1.8} color="var(--color-mark-red)" />
-              </button>
+                  <button
+                    onClick={() => { logout(); setMenuOpen(false); }}
+                    style={{
+                      fontFamily: 'var(--font-serif)',
+                      fontStyle: 'italic',
+                      fontWeight: 600,
+                      fontSize: '1rem',
+                      letterSpacing: '-0.02em',
+                      padding: '0.9rem 1.5rem',
+                      border: '1px solid rgba(26,24,21,0.2)',
+                      borderRadius: '4px',
+                      backgroundColor: 'transparent',
+                      color: '#3D3935',
+                      cursor: 'pointer',
+                      outline: 'none',
+                      width: '100%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                    }}
+                  >
+                    <span>Sair da conta</span>
+                    <ArrowUpRight size={16} strokeWidth={1.8} color="var(--color-mark-red)" />
+                  </button>
+                </>
+              ) : (
+                <>
+                  {/* Criar galeria — destaque total, vermelho */}
+                  <button
+                    onClick={() => { onRegister(); setMenuOpen(false); }}
+                    style={{
+                      fontFamily: 'var(--font-serif)',
+                      fontStyle: 'italic',
+                      fontWeight: 600,
+                      fontSize: '1.1rem',
+                      letterSpacing: '-0.02em',
+                      padding: '1rem 1.5rem',
+                      border: 'none',
+                      borderRadius: '4px',
+                      backgroundColor: 'var(--color-mark-red)',
+                      color: '#F7F5F0',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      outline: 'none',
+                      width: '100%',
+                    }}
+                  >
+                    <span>Criar galeria</span>
+                    <ArrowUpRight size={18} strokeWidth={1.8} />
+                  </button>
+
+                  {/* Entrar na Selezione — ghost serif */}
+                  <button
+                    onClick={() => { onLogin(); setMenuOpen(false); }}
+                    style={{
+                      fontFamily: 'var(--font-serif)',
+                      fontStyle: 'italic',
+                      fontWeight: 600,
+                      fontSize: '1rem',
+                      letterSpacing: '-0.02em',
+                      padding: '0.9rem 1.5rem',
+                      border: '1px solid rgba(26,24,21,0.2)',
+                      borderRadius: '4px',
+                      backgroundColor: 'transparent',
+                      color: '#3D3935',
+                      cursor: 'pointer',
+                      outline: 'none',
+                      width: '100%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                    }}
+                  >
+                    <span>Entrar na Selezione</span>
+                    <ArrowUpRight size={16} strokeWidth={1.8} color="var(--color-mark-red)" />
+                  </button>
+                </>
+              )}
             </div>
           </motion.div>
         )}

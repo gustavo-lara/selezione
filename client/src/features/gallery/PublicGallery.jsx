@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Camera, ArrowLeft } from 'lucide-react';
 import { http } from '../../services/http.js';
 import { GalleryHeader } from './components/GalleryHeader/GalleryHeader.jsx';
@@ -6,7 +7,10 @@ import { PhotoGrid } from './components/PhotoGrid/PhotoGrid.jsx';
 import { PhotoLightbox } from './components/PhotoLightbox/PhotoLightbox.jsx';
 import { SubmitModal } from './components/SubmitModal/SubmitModal.jsx';
 
-export function PublicGallery({ slug, onBackToLanding }) {
+export function PublicGallery() {
+  const { slug } = useParams();
+  const navigate = useNavigate();
+  
   const [galeria, setGaleria] = useState(null);
   const [fotos, setFotos] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -104,11 +108,9 @@ export function PublicGallery({ slug, onBackToLanding }) {
         <p style={{ color: 'var(--color-warm-grey)', marginBottom: '1.5rem' }}>
           {error || 'O link que você acessou não existe ou foi desativado.'}
         </p>
-        {onBackToLanding && (
-          <button onClick={onBackToLanding} className="btn-primary">
-            <ArrowLeft size={16} /> Voltar à Página Inicial
-          </button>
-        )}
+        <button onClick={() => navigate('/')} className="btn-primary">
+          <ArrowLeft size={16} /> Voltar à Página Inicial
+        </button>
       </div>
     );
   }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Copy } from 'lucide-react';
 import { http } from '../../services/http.js';
+import { useAuth } from '../../contexts/AuthContext.jsx';
 import { DashboardHeader } from './components/DashboardHeader/DashboardHeader.jsx';
 import { Toast } from './components/Toast/Toast.jsx';
 import { GalleryList } from './components/GalleryList/GalleryList.jsx';
@@ -10,21 +11,22 @@ import { PhotoUploader } from './components/PhotoUploader/PhotoUploader.jsx';
 import { GalleryTabs } from './components/GalleryTabs/GalleryTabs.jsx';
 import { PhotoGrid } from './components/PhotoGrid/PhotoGrid.jsx';
 
-export function PhotographerDashboard({ user, onLogout, onNavigateToPublic }) {
+export function PhotographerDashboard() {
+  const { currentUser, login, logout } = useAuth();
+  
   const [galerias, setGalerias] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedGaleria, setSelectedGaleria] = useState(null);
   const [galeriaFotos, setGaleriaFotos] = useState([]);
   const [activeTab, setActiveTab] = useState('todas');
 
-  const [currentUser, setCurrentUser] = useState(user);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [novoNome, setNovoNome] = useState('');
   const [creating, setCreating] = useState(false);
   const [uploading, setUploading] = useState(false);
 
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [studioName, setStudioName] = useState(user?.nome || '');
+  const [studioName, setStudioName] = useState(currentUser?.nome || '');
   const [savingSettings, setSavingSettings] = useState(false);
 
   const [toastMsg, setToastMsg] = useState('');
@@ -35,9 +37,8 @@ export function PhotographerDashboard({ user, onLogout, onNavigateToPublic }) {
   };
 
   useEffect(() => {
-    if (user?.nome) setStudioName(user.nome);
-    setCurrentUser(user);
-  }, [user]);
+    if (currentUser?.nome) setStudioName(currentUser.nome);
+  }, [currentUser]);
 
   useEffect(() => {
     fetchGalerias();
@@ -72,15 +73,14 @@ export function PhotographerDashboard({ user, onLogout, onNavigateToPublic }) {
     try {
       const res = await http.put('/api/auth/me', { nome: studioName.trim() });
       const updatedUser = res.data.user;
-      setCurrentUser(updatedUser);
-      localStorage.setItem('@studio:user', JSON.stringify(updatedUser));
+      login(updatedUser, localStorage.getItem('@studio:token'));
       showToast('Nome do estúdio atualizado com sucesso!');
       setIsSettingsOpen(false);
     } catch (err) {
       console.error('Erro ao atualizar perfil:', err);
       if (err.response?.status === 401) {
         alert('Sua sessão expirou. Por favor, faça login novamente.');
-        onLogout();
+        logout();
         return;
       }
       const msg = err.response?.data?.details?.[0] || err.response?.data?.error || err.message || 'Falha ao atualizar nome do estúdio.';
@@ -105,7 +105,7 @@ export function PhotographerDashboard({ user, onLogout, onNavigateToPublic }) {
       console.error('Erro ao criar galeria:', err);
       if (err.response?.status === 401) {
         alert('Sua sessão expirou. Por favor, faça login novamente.');
-        onLogout();
+        logout();
         return;
       }
       const msg = err.response?.data?.details?.[0] || err.response?.data?.error || 'Erro ao comunicar com a API.';
@@ -173,7 +173,7 @@ export function PhotographerDashboard({ user, onLogout, onNavigateToPublic }) {
   };
 
   const copyPublicLink = (slug) => {
-    const publicUrl = `${window.location.origin}/#galeria=${slug}`;
+    const publicUrl = `${window.location.origin}/galeria/${slug}`;
     navigator.clipboard.writeText(publicUrl);
     showToast('Link do cliente copiado para a área de transferência!');
   };
@@ -192,7 +192,7 @@ export function PhotographerDashboard({ user, onLogout, onNavigateToPublic }) {
         onBack={() => setSelectedGaleria(null)}
         onNewGallery={() => setIsModalOpen(true)}
         onSettings={() => { setStudioName(currentUser?.nome || ''); setIsSettingsOpen(true); }}
-        onLogout={onLogout}
+        onLogout={logout}
       />
 
       <main style={{ padding: '1.5rem 1rem', maxWidth: '1200px', margin: '0 auto' }}>
@@ -222,7 +222,7 @@ export function PhotographerDashboard({ user, onLogout, onNavigateToPublic }) {
                   {selectedGaleria.nome}
                 </h1>
                 <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8rem', color: 'var(--color-warm-grey)', wordBreak: 'break-all' }}>
-                  LINK PÚBLICO: {window.location.origin}/#galeria={selectedGaleria.link_publico}
+                  LINK PÚBLICO: {window.location.origin}/galeria/{selectedGaleria.link_publico}
                 </p>
               </div>
 

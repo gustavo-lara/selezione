@@ -23,6 +23,14 @@ O projeto utiliza exclusivamente a biblioteca **`lucide-react`**.
 O projeto utiliza **`framer-motion`** para animações complexas, transições de tela e micro-interações.
 *   **Regra:** Não utilize bibliotecas de animação concorrentes (como `react-spring` ou `gsap`). Sempre que precisar de animações além do CSS padrão (`animations.css`), utilize o componente `<motion.div>` do framer-motion.
 
+### 4. Roteamento (React Router)
+O projeto utiliza **`react-router-dom`** para controle de rotas no cliente.
+*   **Regra:** Não utilize abordagens manuais com estados (`view`, `hash` da URL) para simular troca de telas. Utilize os componentes oficiais e hooks como `useNavigate` e `useParams`. O App está devidamente protegido com componentes guardiões (como `ProtectedRoute`).
+
+### 5. Gerenciamento de Estado Global (Context API)
+O estado global (como a sessão do usuário logado) é gerenciado usando a **Context API** do React nativa.
+*   **Regra:** Não utilize Redux, Zustand ou MobX. Para checar autenticação, importe o hook `useAuth()` do `AuthContext`.
+
 ## Backend (Node.js + Express)
 
 ### 1. Validação de Dados (Zod)

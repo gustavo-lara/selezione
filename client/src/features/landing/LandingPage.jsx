@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext.jsx';
 import { LandingHeader } from './components/LandingHeader/LandingHeader.jsx';
 import { HeroSection } from './components/HeroSection/HeroSection.jsx';
 import { WhatIsSection } from './components/WhatIsSection/WhatIsSection.jsx';
@@ -9,11 +11,17 @@ import { CTASection } from './components/CTASection/CTASection.jsx';
 import { LandingFooter } from './components/LandingFooter/LandingFooter.jsx';
 import { AuthModal } from '../auth/components/AuthModal/AuthModal.jsx';
 
-export function LandingPage({ onLoginSuccess }) {
+export function LandingPage() {
+  const navigate = useNavigate();
+  const { currentUser } = useAuth();
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [authMode, setAuthMode] = useState('login');
 
   const openAuth = (mode = 'login') => {
+    if (currentUser) {
+      navigate('/dashboard');
+      return;
+    }
     setAuthMode(mode);
     setIsAuthOpen(true);
   };
@@ -57,8 +65,8 @@ export function LandingPage({ onLoginSuccess }) {
         isOpen={isAuthOpen}
         initialMode={authMode}
         onClose={() => setIsAuthOpen(false)}
-        onSuccess={(user) => {
-          if (onLoginSuccess) onLoginSuccess(user);
+        onSuccess={() => {
+          navigate('/dashboard');
         }}
       />
     </div>

@@ -1,10 +1,12 @@
 import React, { useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { ArrowLeft } from 'lucide-react';
 
 const BG_PHOTO = 'https://images.unsplash.com/photo-1517487881594-2787fef5ebf7?auto=format&fit=crop&w=1920&q=90'; // A moody gallery/studio space
 
-export function NotFoundPage({ onBackToLanding }) {
+export function NotFoundPage() {
+  const navigate = useNavigate();
   const containerRef = useRef(null);
 
   /* ── Interatividade do Mouse (Parallax Suave) ── */
@@ -180,7 +182,7 @@ export function NotFoundPage({ onBackToLanding }) {
           style={{ marginTop: '4rem' }}
         >
           <motion.button
-            onClick={onBackToLanding || (() => window.location.href = '/')}
+            onClick={() => navigate('/')}
             whileHover={{ opacity: 0.7 }}
             whileTap={{ scale: 0.97 }}
             style={{
