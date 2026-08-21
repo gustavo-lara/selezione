@@ -1,0 +1,21 @@
+# Contexto do Frontend (Client)
+
+Este documento serve como guia para agentes de IA que trabalham na parte do frontend deste projeto. O frontend utiliza React (criado com Vite).
+
+## Estrutura de Diretórios (`/client/src/`)
+
+Para manter a organização e o padrão do projeto, os agentes de IA devem respeitar a seguinte arquitetura:
+
+*   **`assets/`**: Arquivos estáticos como imagens, ícones e fontes que são importados pelo código.
+*   **`features/`**: Contém componentes e lógicas específicas agrupadas por funcionalidade (feature-based architecture). Componentes que pertencem exclusivamente a uma feature devem ficar aqui.
+*   **`pages/`**: Componentes que representam páginas completas ou rotas da aplicação. As páginas costumam agrupar e organizar os componentes vindos de `features`.
+*   **`services/`**: Responsável por toda a comunicação externa, principalmente chamadas à API (requests HTTP) e integrações com o backend.
+*   **`styles/`**: Arquivos de estilização globais, variáveis de CSS e configurações de design.
+*   **Arquivos na raiz do `src` (ex: `App.jsx`, `main.jsx`, `index.css`)**: Ponto de entrada da aplicação, rotas principais e estilos base.
+
+## Regras para Agentes de IA
+
+1.  **Arquitetura por Features:** Prefira colocar componentes específicos dentro de suas respectivas pastas em `/features` em vez de criar uma pasta genérica de componentes.
+2.  **Separação de Preocupações:** Componentes visuais (`features` e `pages`) não devem fazer chamadas diretas à API. Utilize funções definidas na pasta `/services` para buscar ou enviar dados.
+3.  **Estilização:** Siga o padrão de estilização já estabelecido no projeto.
+4.  **Atenção:** Não altere configurações sensíveis (`vite.config.js`, dependências principais) sem necessidade explícita.
