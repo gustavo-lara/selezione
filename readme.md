@@ -1,33 +1,82 @@
-# Selezione, by Menegassi
+# Selezione
 
-**O prestígio da escolha. A precisão da sua entrega.**
+Selezione is a monorepo application designed to manage photo galleries and client selections for photographers.
 
-### A Visão
+## 🏗 Architecture
 
-A fotografia exige uma apresentação à altura de sua criação. O Selezione é o ambiente digital desenhado para abrigar a curadoria final dos seus ensaios. Mais do que uma ferramenta de seleção, é um espaço que trata a imagem com o respeito de uma galeria e a entrega com a exatidão de um ateliê.
+The project is structured as a monorepo containing the following workspaces:
 
-Onde antes havia ruído e dispersão, entregamos silêncio e foco.
+- `/client`: The frontend application (Single Page Application).
+- `/api`: The backend Node.js API (In Development).
+- `/db`: Database schemas and migrations (In Development).
 
-### A Dinâmica da Entrega
+## 🛠 Tech Stack
 
-O fluxo de aprovação foi desenhado para ser absoluto, dividindo-se em três momentos de puro refinamento:
+### Frontend (`/client`)
+- **Framework**: React 19 + Vite
+- **Styling**: Vanilla CSS (CSS Modules / Custom Properties)
+- **Animations**: Framer Motion
+- **Icons**: Lucide React
+- **Routing**: React Router (CSR)
 
-- **A Preparação:** No ambiente privado do fotógrafo, o ensaio ganha forma. A galeria é montada e um acesso exclusivo é gerado sob a assinatura do estúdio.
-- **O Convite:** O cliente é recebido através de um acesso direto e seguro. Sem barreiras, sem necessidade de cadastros. Uma imersão imediata na obra.
-- **A Decisão:** A seleção ocorre de maneira instintiva e definitiva. O retorno é cristalino: o profissional recebe a aprovação exata, pronta para a etapa final de edição ou impressão.
+## 🚀 Getting Started
 
-### As Duas Faces da Experiência
+### Prerequisites
+- Node.js (v18+ recommended)
+- npm or yarn
 
-#### Para o Fotógrafo: A Clareza do Controle
+### Running the Frontend Locally (`/client`)
 
-A excelência não aceita margem para dúvidas. O Selezione centraliza a gestão da escolha final em um único painel, eliminando falhas de comunicação e retrabalho. O profissional mantém o domínio total do processo, com a garantia de que cada seleção chegará com precisão cirúrgica. A eficiência aqui não é um recurso extra; ela é invisível, orgânica e absoluta.
+```bash
+# Navigate to the client directory
+cd client
 
-#### Para o Cliente: O Privilégio da Escolha
+# Install dependencies
+npm install
 
-A obra é o centro das atenções. O cliente é conduzido por uma interface de alto contraste e tipografia elegante — um palco limpo, livre de distrações e atritos tecnológicos. A experiência de escolher as fotografias torna-se um momento de contemplação, refletindo diretamente o valor e o cuidado investidos no ensaio fotográfico.
+# Start the Vite development server
+npm run dev
+```
+The application will be available at `http://localhost:5173`.
 
-### A Assinatura
+### Running the Backend API (`/api`)
 
-A fotografia existe para ser vista em sua melhor forma. O Selezione carrega a herança de um nome que representa o cuidado absoluto e a atenção irrestrita aos detalhes. O endosso invisível que garante que a transição entre o olhar de quem fotografa e o desejo de quem recebe seja sempre impecável.
+```bash
+# Navigate to the api directory
+cd api
 
-**Menegassi. O selo da sua melhor entrega.**
+# Install dependencies
+npm install
+
+# Copy the example environment file and configure your variables
+cp .env.example .env
+
+# Start the development server (uses node --watch)
+npm run dev
+```
+
+### Database & Migrations
+
+The database uses PostgreSQL (`pg`). Migrations are managed via the API workspace.
+
+```bash
+# From the /api directory, run migrations to setup your database
+npm run db:migrate
+```
+
+## 📦 Deployment
+
+### Vercel (Frontend)
+The `/client` directory is optimized for deployment on Vercel. 
+Since it is a Vite-based Single Page Application (SPA), a `vercel.json` file is included in the `client` directory to handle client-side routing. This ensures that all requests are rewritten to `index.html`, allowing React to handle 404s and dynamic routes correctly instead of Vercel returning a 404 error.
+
+```json
+{
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
+```
