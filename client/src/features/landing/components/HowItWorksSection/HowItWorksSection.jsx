@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { motion, useScroll, useTransform, useInView } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
 
 const steps = [
   {
@@ -30,166 +30,123 @@ const steps = [
 
 export function HowItWorksSection() {
   const containerRef = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start center', 'end center'],
-  });
-
-  const headerRef = useRef(null);
-  const headerInView = useInView(headerRef, { once: true, margin: '-40% 0px' });
-
-  // A linha cronológica desce conforme o scroll
-  const lineHeight = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
 
   return (
     <section
       ref={containerRef}
       style={{
-        backgroundColor: '#7A140F', // Um vermelho luxuoso e profundo
+        backgroundColor: '#7A140F',
         backgroundImage: 'radial-gradient(ellipse at top, #A11D15 0%, #61100C 100%)',
-        padding: 'clamp(6rem, 12vw, 10rem) clamp(1.5rem, 5vw, 4rem)',
+        padding: 'clamp(4rem, 10vw, 12rem) clamp(1rem, 5vw, 4rem)',
         position: 'relative',
-        overflow: 'hidden',
         color: '#F7F5F0',
+        overflow: 'hidden'
       }}
     >
-      {/* ── Efeito de Flash de Câmera na Entrada ── */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={headerInView ? { opacity: [0, 1, 0, 0, 0.85, 0] } : {}}
-        transition={{ duration: 0.6, times: [0, 0.1, 0.2, 0.4, 0.5, 0.6], ease: "easeOut" }}
-        style={{
-          position: 'absolute',
-          inset: 0,
-          backgroundColor: '#FFFFFF',
-          zIndex: 50,
-          pointerEvents: 'none',
-          mixBlendMode: 'screen'
-        }}
-      />
-
-      {/* ── Animações de Fundo (Graças/Orbs) ── */}
-      <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 0 }}>
-        <motion.div
-          animate={{
-            x: ['-10%', '10%', '-10%'],
-            y: ['-10%', '20%', '-10%'],
-            scale: [1, 1.3, 1],
+      <style>{`
+        .hiw-sticky-col {
+          position: relative;
+          margin-bottom: 2rem;
+          z-index: 10;
+        }
+        .hiw-scroll-col {
+          display: flex;
+          flex-direction: column;
+          gap: 6rem;
+          padding-top: 0;
+        }
+        @media (min-width: 768px) {
+          .hiw-sticky-col {
+            position: sticky;
+            top: 20vh;
+            margin-bottom: 0;
+          }
+          .hiw-scroll-col {
+            gap: 8rem;
+            padding-top: 10vh;
+          }
+        }
+      `}</style>
+      <div style={{
+        maxWidth: '1200px',
+        margin: '0 auto',
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 450px), 1fr))',
+        gap: 'clamp(2rem, 8vw, 8rem)',
+        alignItems: 'start'
+      }}>
+        
+        {/* Sticky Left Column */}
+        <motion.div 
+          className="hiw-sticky-col"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-20%' }}
+          variants={{
+            hidden: { opacity: 0 },
+            visible: {
+              opacity: 1,
+              transition: { staggerChildren: 0.2, delayChildren: 0.1 }
+            }
           }}
-          transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
-          style={{
-            position: 'absolute',
-            top: '-10%',
-            left: '-10%',
-            width: '50vw',
-            height: '50vw',
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(255, 60, 40, 0.6) 0%, transparent 70%)',
-            filter: 'blur(60px)',
-            mixBlendMode: 'screen'
-          }}
-        />
-        <motion.div
-          animate={{
-            x: ['10%', '-20%', '10%'],
-            y: ['20%', '-10%', '20%'],
-            scale: [1, 1.4, 1],
-          }}
-          transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-          style={{
-            position: 'absolute',
-            bottom: '-10%',
-            right: '-10%',
-            width: '60vw',
-            height: '60vw',
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(255, 90, 50, 0.45) 0%, transparent 70%)',
-            filter: 'blur(70px)',
-            mixBlendMode: 'color-dodge'
-          }}
-        />
-      </div>
-
-      {/* Textura de Grain Sutil */}
-      <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0.08, pointerEvents: 'none', mixBlendMode: 'screen', zIndex: 1 }} xmlns="http://www.w3.org/2000/svg">
-        <filter id="grain-red">
-          <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
-          <feColorMatrix type="saturate" values="0" />
-        </filter>
-        <rect width="100%" height="100%" filter="url(#grain-red)" />
-      </svg>
-
-      <div style={{ maxWidth: '900px', margin: '0 auto', position: 'relative', zIndex: 2 }}>
-        {/* Header Centralizado */}
-        <div ref={headerRef} style={{ textAlign: 'center', marginBottom: '6rem' }}>
-          <motion.span
-            initial={{ opacity: 0, y: 15 }}
-            animate={headerInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8 }}
-            style={{
-              fontFamily: 'var(--font-serif)',
-              fontStyle: 'italic',
-              fontSize: '1.2rem',
-              color: 'rgba(247,245,240,0.7)',
-              fontWeight: 400,
-              display: 'block',
-              marginBottom: '1rem',
+        >
+          <motion.span 
+            variants={{
+              hidden: { opacity: 0, y: 20, filter: 'blur(10px)' },
+              visible: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 1, ease: [0.16, 1, 0.3, 1] } }
+            }}
+            style={{ 
+              fontFamily: 'var(--font-serif)', 
+              fontStyle: 'italic', 
+              fontSize: '1.2rem', 
+              color: 'var(--color-film-beige)', 
+              display: 'block', 
+              marginBottom: '1rem' 
             }}
           >
             A Ordem Cronológica
           </motion.span>
-          <motion.h2
-            initial={{ opacity: 0, y: 25 }}
-            animate={headerInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          <motion.h2 
+            variants={{
+              hidden: { opacity: 0, y: 30, filter: 'blur(10px)' },
+              visible: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 1.2, ease: [0.16, 1, 0.3, 1] } }
+            }}
             style={{
               fontFamily: 'var(--font-serif)',
-              fontSize: 'clamp(2.5rem, 6vw, 4.2rem)',
-              fontWeight: 600,
+              fontSize: 'clamp(2rem, 8vw, 4.2rem)',
+              fontWeight: 400,
               color: '#FFFFFF',
               lineHeight: 1.1,
               letterSpacing: '-0.02em',
+              marginBottom: '2rem'
             }}
           >
-            Três momentos.<br />
-            <span style={{ fontStyle: 'italic', color: 'rgba(255,255,255,0.85)' }}>Zero atrito.</span>
+            Três passos.<br />
+            <span style={{ color: 'rgba(255,255,255,0.3)', fontStyle: 'italic' }}>Zero atrito.</span>
           </motion.h2>
+          <motion.p 
+            variants={{
+              hidden: { opacity: 0, y: 20 },
+              visible: { opacity: 1, y: 0, transition: { duration: 1, ease: [0.16, 1, 0.3, 1] } }
+            }}
+            style={{
+              fontSize: '1.1rem',
+              color: 'rgba(255,255,255,0.6)',
+              lineHeight: 1.6,
+              maxWidth: '400px'
+            }}
+          >
+            Uma experiência desenhada para remover qualquer barreira entre a sua arte e o cliente final.
+          </motion.p>
+        </motion.div>
+
+        {/* Scrolling Right Column */}
+        <div className="hiw-scroll-col">
+          {steps.map((step, i) => (
+            <StepItem key={step.number} step={step} index={i} />
+          ))}
         </div>
 
-        {/* Timeline Vertical */}
-        <div style={{ position: 'relative', paddingLeft: 'clamp(2rem, 5vw, 4rem)' }}>
-          {/* Fundo da Linha (Cinza escuro transparente) */}
-          <div
-            style={{
-              position: 'absolute',
-              left: 'clamp(2rem, 5vw, 4rem)',
-              top: '2rem',
-              bottom: 0,
-              width: '1px',
-              backgroundColor: 'rgba(247,245,240,0.15)',
-            }}
-          />
-          {/* Linha Ativa Animada (Branca) */}
-          <motion.div
-            style={{
-              position: 'absolute',
-              left: 'clamp(2rem, 5vw, 4rem)',
-              top: '2rem',
-              bottom: 0,
-              width: '2px',
-              backgroundColor: '#FFFFFF',
-              height: lineHeight,
-              transformOrigin: 'top',
-              boxShadow: '0 0 10px rgba(255,255,255,0.5)',
-            }}
-          />
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '5rem' }}>
-            {steps.map((step, i) => (
-              <StepItem key={step.number} step={step} index={i} />
-            ))}
-          </div>
-        </div>
       </div>
     </section>
   );
@@ -202,99 +159,114 @@ function StepItem({ step, index }) {
   return (
     <motion.div
       ref={itemRef}
-      initial={{ opacity: 0, x: -20 }}
-      animate={inView ? { opacity: 1, x: 0 } : {}}
-      transition={{ duration: 0.9, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+      initial="hidden"
+      animate={inView ? "visible" : "hidden"}
+      variants={{
+        hidden: { opacity: 0 },
+        visible: {
+          opacity: 1,
+          transition: { staggerChildren: 0.15, delayChildren: 0.1 }
+        }
+      }}
       style={{
         position: 'relative',
-        paddingLeft: 'clamp(2rem, 4vw, 3rem)',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '1rem',
       }}
     >
-      {/* Indicador Cronológico (Bolinha na linha) */}
+      {/* Background Watermark Number */}
       <motion.div
-        initial={{ scale: 0, opacity: 0 }}
-        animate={inView ? { scale: 1, opacity: 1 } : {}}
-        transition={{ duration: 0.6, delay: 0.3, type: 'spring' }}
+        variants={{
+          hidden: { opacity: 0, x: -50, scale: 0.9 },
+          visible: { opacity: 0.03, x: 0, scale: 1, transition: { duration: 1.5, ease: [0.16, 1, 0.3, 1] } }
+        }}
         style={{
           position: 'absolute',
-          left: '-5px',
-          top: '1.2rem',
-          width: '12px',
-          height: '12px',
-          borderRadius: '50%',
-          backgroundColor: '#FFFFFF',
-          boxShadow: '0 0 15px rgba(255,255,255,0.8)',
-          zIndex: 2,
+          top: '-15%',
+          left: '-5%',
+          fontSize: 'clamp(10rem, 20vw, 16rem)',
+          fontFamily: 'var(--font-serif)',
+          fontStyle: 'italic',
+          fontWeight: 400,
+          color: '#FFFFFF',
+          lineHeight: 0.8,
+          pointerEvents: 'none',
+          zIndex: 0,
         }}
-      />
+      >
+        {step.number}
+      </motion.div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-        {/* Metadados da Etapa */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap', marginBottom: '0.5rem' }}>
-          <span
-            style={{
-              fontFamily: 'var(--font-serif)',
-              fontSize: '1.4rem',
-              fontWeight: 400,
-              fontStyle: 'italic',
-              color: 'rgba(255,255,255,0.9)',
-            }}
-          >
+      <div style={{ position: 'relative', zIndex: 1 }}>
+        <motion.div 
+          variants={{
+            hidden: { opacity: 0, y: 15 },
+            visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
+          }}
+          style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}
+        >
+          <span style={{ fontFamily: 'var(--font-serif)', fontStyle: 'italic', fontSize: '1.4rem', color: 'var(--color-film-beige)' }}>
             {step.number}
           </span>
-          <div style={{ width: '20px', height: '1px', backgroundColor: 'rgba(255,255,255,0.3)' }} />
-          <span
-            style={{
-              fontFamily: 'var(--font-serif)',
-              fontSize: '1.1rem',
-              color: 'rgba(255,255,255,0.8)',
-            }}
-          >
+          <div style={{ width: '40px', height: '1px', backgroundColor: 'rgba(255,255,255,0.2)' }} />
+          <span style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'rgba(255,255,255,0.5)', fontWeight: 600 }}>
             {step.phase}
           </span>
-          <span
-            style={{
-              fontFamily: 'var(--font-serif)',
-              fontStyle: 'italic',
-              fontSize: '0.95rem',
-              color: step.side === 'Fotógrafo' ? '#1A1815' : '#FFFFFF',
-              backgroundColor: step.side === 'Fotógrafo' ? '#F7F5F0' : 'rgba(255,255,255,0.15)',
-              padding: '0.15rem 0.6rem',
-              borderRadius: '4px',
-            }}
-          >
-            Ação: {step.side}
-          </span>
-        </div>
+        </motion.div>
 
-        {/* Título */}
-        <h3
+        <motion.h3 
+          variants={{
+            hidden: { opacity: 0, y: 20, filter: 'blur(8px)' },
+            visible: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 1, ease: [0.16, 1, 0.3, 1] } }
+          }}
           style={{
             fontFamily: 'var(--font-serif)',
-            fontStyle: 'italic',
-            fontSize: 'clamp(1.6rem, 3.2vw, 2.4rem)',
+            fontSize: 'clamp(1.5rem, 8vw, 2.6rem)',
             fontWeight: 400,
             color: '#FFFFFF',
             lineHeight: 1.2,
+            marginBottom: '1rem'
           }}
         >
           {step.title}
-        </h3>
+        </motion.h3>
 
-        {/* Descrição */}
-        <p
+        <motion.p 
+          variants={{
+            hidden: { opacity: 0, y: 15 },
+            visible: { opacity: 1, y: 0, transition: { duration: 1, ease: [0.16, 1, 0.3, 1] } }
+          }}
           style={{
-            fontSize: '1rem',
-            color: 'rgba(247,245,240,0.7)',
-            lineHeight: 1.6,
-            maxWidth: '540px',
-            marginTop: '0.5rem',
+            fontSize: '1.1rem',
+            color: 'rgba(255,255,255,0.65)',
+            lineHeight: 1.7,
+            maxWidth: '460px'
           }}
         >
           {step.description}
-        </p>
+        </motion.p>
 
-
+        <motion.div 
+          variants={{
+            hidden: { opacity: 0, scale: 0.95 },
+            visible: { opacity: 1, scale: 1, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
+          }}
+          style={{ marginTop: '2.5rem' }}
+        >
+          <span style={{
+            fontFamily: 'var(--font-serif)',
+            fontStyle: 'italic',
+            fontSize: '1rem',
+            color: step.side === 'Fotógrafo' ? 'var(--color-ink)' : '#FFFFFF',
+            backgroundColor: step.side === 'Fotógrafo' ? 'var(--color-film-beige)' : 'rgba(255,255,255,0.08)',
+            padding: '0.5rem 1.2rem',
+            borderRadius: '100px',
+            border: step.side === 'Cliente' ? '1px solid rgba(255,255,255,0.15)' : 'none'
+          }}>
+            Ação: {step.side}
+          </span>
+        </motion.div>
       </div>
     </motion.div>
   );

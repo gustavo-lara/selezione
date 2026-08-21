@@ -1,6 +1,5 @@
 import React, { useRef } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
 
 export function CTASection({ onRegister }) {
   const ref = useRef(null);
@@ -117,16 +116,17 @@ export function CTASection({ onRegister }) {
               color: '#FFFFFF',
               fontFamily: 'var(--font-sans)',
               fontWeight: 600,
-              fontSize: '0.95rem',
-              padding: '1.25rem 3.5rem',
+              fontSize: 'clamp(0.65rem, 3.5vw, 0.95rem)',
+              padding: 'clamp(0.8rem, 3vw, 1.25rem) clamp(1rem, 4vw, 3.5rem)',
               border: '1px solid rgba(255,255,255,0.3)',
               borderRadius: '100px',
               cursor: 'pointer',
               display: 'inline-flex',
               alignItems: 'center',
-              gap: '0.8rem',
+              gap: 'clamp(0.4rem, 2vw, 0.8rem)',
               letterSpacing: '0.04em',
               textTransform: 'uppercase',
+              whiteSpace: 'nowrap',
               transition: 'all 0.3s ease',
               boxShadow: '0 0 30px rgba(255,255,255,0.0)',
             }}
@@ -134,7 +134,6 @@ export function CTASection({ onRegister }) {
             onMouseLeave={(e) => e.currentTarget.style.boxShadow = '0 0 30px rgba(255,255,255,0.0)'}
           >
             Criar Minha Primeira Galeria
-            <ArrowRight size={18} strokeWidth={2} />
           </motion.button>
         </motion.div>
 
