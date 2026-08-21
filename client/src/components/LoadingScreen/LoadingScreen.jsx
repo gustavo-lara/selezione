@@ -2,11 +2,11 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import './LoadingScreen.css';
 
-export const LoadingScreen = ({ fullScreen = true, message = "Preparando a galeria..." }) => {
+export const LoadingScreen = ({ fullScreen = true, message = "Preparando a galeria...", fadeIn = false }) => {
   return (
     <motion.div
       className={`cinematic-loading-container ${fullScreen ? 'full-screen' : 'inline-container'}`}
-      initial={{ opacity: 0 }}
+      initial={{ opacity: fadeIn ? 0 : 1 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0, transition: { duration: 1, ease: [0.16, 1, 0.3, 1] } }}
       transition={{ duration: 0.6 }}

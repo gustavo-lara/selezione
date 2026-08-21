@@ -53,8 +53,11 @@ export function AuthModal({ isOpen, onClose, onSuccess, initialMode = 'login' })
 
       login(user, token);
 
-      if (onSuccess) onSuccess(user);
-      onClose();
+      if (onSuccess) {
+        onSuccess(user);
+      } else {
+        onClose();
+      }
     } catch (err) {
       console.error('Erro na autenticação:', err);
       const msg = err.response?.data?.error || err.response?.data?.details?.[0] || 'Erro ao processar. Tente novamente.';

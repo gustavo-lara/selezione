@@ -10,12 +10,15 @@ import { SettingsModal } from './components/SettingsModal/SettingsModal.jsx';
 import { PhotoUploader } from './components/PhotoUploader/PhotoUploader.jsx';
 import { GalleryTabs } from './components/GalleryTabs/GalleryTabs.jsx';
 import { PhotoGrid } from './components/PhotoGrid/PhotoGrid.jsx';
+import { LoadingScreen } from '../../components/LoadingScreen/LoadingScreen.jsx';
+import { AnimatePresence, motion } from 'framer-motion';
 
 export function PhotographerDashboard() {
   const { currentUser, login, logout } = useAuth();
   
   const [galerias, setGalerias] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [selectedGaleria, setSelectedGaleria] = useState(null);
   const [galeriaFotos, setGaleriaFotos] = useState([]);
   const [activeTab, setActiveTab] = useState('todas');
@@ -41,7 +44,10 @@ export function PhotographerDashboard() {
   }, [currentUser]);
 
   useEffect(() => {
-    fetchGalerias();
+    fetchGalerias().finally(() => {
+      // Adicionando um pequeno delay para que a animação possa ser vista (pode remover depois)
+      setTimeout(() => setInitialLoading(false), 1500);
+    });
   }, []);
 
   const fetchGalerias = async () => {
@@ -183,10 +189,20 @@ export function PhotographerDashboard() {
     : galeriaFotos;
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: 'var(--color-paper)', color: 'var(--color-ink)' }}>
-      <Toast message={toastMsg} />
+    <AnimatePresence mode="wait">
+      {initialLoading ? (
+        <LoadingScreen key="loading" message="Abrindo o seu estúdio..." />
+      ) : (
+        <motion.div
+          key="content"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+          style={{ minHeight: '100vh', backgroundColor: 'var(--color-paper)', color: 'var(--color-ink)' }}
+        >
+          <Toast message={toastMsg} />
 
-      <DashboardHeader
+          <DashboardHeader
         currentUser={currentUser}
         selectedGaleria={selectedGaleria}
         onBack={() => setSelectedGaleria(null)}
@@ -263,14 +279,16 @@ export function PhotographerDashboard() {
         onClose={() => setIsModalOpen(false)}
       />
 
-      <SettingsModal
-        isOpen={isSettingsOpen}
-        studioName={studioName}
-        saving={savingSettings}
-        onChange={(e) => setStudioName(e.target.value)}
-        onSubmit={handleUpdateProfile}
-        onClose={() => setIsSettingsOpen(false)}
-      />
-    </div>
+          <SettingsModal
+            isOpen={isSettingsOpen}
+            studioName={studioName}
+            saving={savingSettings}
+            onChange={(e) => setStudioName(e.target.value)}
+            onSubmit={handleUpdateProfile}
+            onClose={() => setIsSettingsOpen(false)}
+          />
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }

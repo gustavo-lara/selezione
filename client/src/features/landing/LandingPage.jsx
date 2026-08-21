@@ -10,12 +10,15 @@ import { ContactSheetDemo } from './components/ContactSheetDemo/ContactSheetDemo
 import { CTASection } from './components/CTASection/CTASection.jsx';
 import { LandingFooter } from './components/LandingFooter/LandingFooter.jsx';
 import { AuthModal } from '../auth/components/AuthModal/AuthModal.jsx';
+import { LoadingScreen } from '../../components/LoadingScreen/LoadingScreen.jsx';
+import { AnimatePresence } from 'framer-motion';
 
 export function LandingPage() {
   const navigate = useNavigate();
   const { currentUser } = useAuth();
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [authMode, setAuthMode] = useState('login');
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   const openAuth = (mode = 'login') => {
     if (currentUser) {
@@ -64,11 +67,26 @@ export function LandingPage() {
       <AuthModal
         isOpen={isAuthOpen}
         initialMode={authMode}
-        onClose={() => setIsAuthOpen(false)}
+        onClose={() => {
+          if (!isTransitioning) setIsAuthOpen(false);
+        }}
         onSuccess={() => {
-          navigate('/dashboard');
+          // Bloqueia o fechamento do modal e aciona a tela preta de transição por cima dele
+          setIsTransitioning(true);
+          
+          // Aguarda o tempo do fade-in da LoadingScreen (aprox 600ms) antes de pular pro dashboard
+          setTimeout(() => {
+            navigate('/dashboard');
+          }, 600);
         }}
       />
+
+      {/* Tela de transição cinematográfica injetada por cima do modal aberto */}
+      <AnimatePresence>
+        {isTransitioning && (
+          <LoadingScreen message="Autenticando..." fadeIn={true} />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
