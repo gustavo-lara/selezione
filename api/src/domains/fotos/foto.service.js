@@ -1,33 +1,50 @@
 import crypto from 'crypto';
 import path from 'path';
+import fs from 'fs';
 import { query } from '../../infra/db/pool.js';
 import { supabaseStorage } from '../../infra/storage/supabaseStorage.js';
 
 export const saveUploadedFotos = async ({ galeriaId, files }) => {
   const savedFotos = [];
+  const CONCURRENCY_LIMIT = 5;
 
-  for (let i = 0; i < files.length; i++) {
-    const file = files[i];
+  // Função helper para processar um único arquivo
+  const processFile = async (file, index) => {
     const ext = path.extname(file.originalname).toLowerCase() || '.jpg';
     const uniqueHash = crypto.randomBytes(4).toString('hex');
     const storageFilename = `${galeriaId}/${Date.now()}-${uniqueHash}${ext}`;
 
-    // Upload via REST API para o Supabase Storage
-    const publicUrl = await supabaseStorage.uploadFile({
-      filename: storageFilename,
-      buffer: file.buffer,
-      mimeType: file.mimetype
-    });
+    try {
+      // Upload via REST API para o Supabase Storage lendo do disco
+      const publicUrl = await supabaseStorage.uploadFile({
+        filename: storageFilename,
+        filePath: file.path,
+        mimeType: file.mimetype
+      });
 
-    // Inserção do metadado no banco PostgreSQL
-    const result = await query(
-      `INSERT INTO fotos (galeria_id, url_storage, thumbnail_url, ordem, tamanho_arquivo_bytes)
-       VALUES ($1, $2, $3, $4, $5)
-       RETURNING id, galeria_id, url_storage, thumbnail_url, ordem, tamanho_arquivo_bytes, created_at;`,
-      [galeriaId, publicUrl, publicUrl, i, file.size]
-    );
+      // Inserção do metadado no banco PostgreSQL
+      const result = await query(
+        `INSERT INTO fotos (galeria_id, url_storage, thumbnail_url, ordem, tamanho_arquivo_bytes)
+         VALUES ($1, $2, $3, $4, $5)
+         RETURNING id, galeria_id, url_storage, thumbnail_url, ordem, tamanho_arquivo_bytes, created_at;`,
+        [galeriaId, publicUrl, publicUrl, index, file.size]
+      );
 
-    savedFotos.push(result.rows[0]);
+      return result.rows[0];
+    } finally {
+      // Sempre limpar o arquivo temporário do disco
+      if (file.path && fs.existsSync(file.path)) {
+        fs.unlinkSync(file.path);
+      }
+    }
+  };
+
+  // Processamento em lotes (paralelismo controlado)
+  for (let i = 0; i < files.length; i += CONCURRENCY_LIMIT) {
+    const batch = files.slice(i, i + CONCURRENCY_LIMIT);
+    const batchPromises = batch.map((file, idx) => processFile(file, i + idx));
+    const batchResults = await Promise.all(batchPromises);
+    savedFotos.push(...batchResults);
   }
 
   return savedFotos;
@@ -116,17 +133,25 @@ export const deleteFotosFromStorageByGaleriaId = async (galeriaId) => {
   if (fotos && fotos.length > 0) {
     console.log(`Iniciando exclusão de ${fotos.length} fotos da galeria ${galeriaId} no storage...`);
     
-    // Removemos sequencialmente para não sobrecarregar a API caso sejam muitas fotos
-    for (const foto of fotos) {
-      try {
-        const urlParts = foto.url_storage.split('/storage/v1/object/public/galerias/');
-        if (urlParts.length === 2) {
-          const storageFilename = urlParts[1];
-          await supabaseStorage.deleteFile(storageFilename);
+    const DELETE_CONCURRENCY = 10;
+    
+    // Removemos em lotes paralelos para não gerar timeout no frontend e não sobrecarregar a API
+    for (let i = 0; i < fotos.length; i += DELETE_CONCURRENCY) {
+      const batch = fotos.slice(i, i + DELETE_CONCURRENCY);
+      
+      const batchPromises = batch.map(async (foto) => {
+        try {
+          const urlParts = foto.url_storage.split('/storage/v1/object/public/galerias/');
+          if (urlParts.length === 2) {
+            const storageFilename = urlParts[1];
+            await supabaseStorage.deleteFile(storageFilename);
+          }
+        } catch (err) {
+          console.warn(`Aviso: Falha ao deletar foto ${foto.id} do storage:`, err.message);
         }
-      } catch (err) {
-        console.warn(`Aviso: Falha ao deletar foto ${foto.id} do storage:`, err.message);
-      }
+      });
+      
+      await Promise.all(batchPromises);
     }
   }
 };

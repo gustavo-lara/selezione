@@ -41,13 +41,13 @@ Este documento é a "fonte da verdade" do comportamento atual e servirá de base
 ## 3. Upload e Gestão de Fotos
 
 ### 3.1. Processamento e Limites Técnicos (Middleware)
-*   **Tipos Permitidos:** O upload (interceptado por Multer) aceita rigorosamente apenas os formatos: `JPEG`, `JPG`, `PNG`, `WEBP` e `HEIC`. O padrão de salvamento caso a extensão original falhe é `.jpg`.
-*   **Tamanho Máximo e Limites de Capacidade (Conta/Galeria):** Com a introdução do modelo Freemium, o foco passa a ser o limite da conta e da galeria. Cada foto salva registra seu tamanho exato (`tamanho_arquivo_bytes`). O limite de 25MB por foto passará a ser removido no upload, sendo substituído pela verificação do `tamanho_alocado_bytes` da galeria. No escopo maior, o sistema obedece ao plano do fotógrafo (ex: `FREE` com limite de 3GB de `armazenamento_total_bytes`).
+*   **Tipos Permitidos:** O upload (interceptado por Multer) aceita imagens (`JPEG`, `JPG`, `PNG`, `WEBP`, `HEIC`) e vídeos de alta resolução (`MP4`, `WEBM`, `MOV`).
+*   **Tamanho Máximo e Limites de Capacidade:** Não existe mais limite de tamanho por arquivo (ex: a antiga trava de 25MB foi extinta). O único bloqueador no momento do upload é o `tamanho_alocado_bytes` da própria galeria. Se o fotógrafo tentar subir um arquivo que, somado ao que já existe, ultrapasse a cota alocada, o upload será recusado.
 
 ### 3.2. Armazenamento e Exclusão
-*   **Fluxo de Salvamento:** As imagens não são salvas no disco local do servidor. O arquivo sobe para a memória RAM (Buffer) e é enviado por REST API diretamente para um bucket no **Supabase Storage**.
-*   **Thumbnail vs Alta Resolução:** Atualmente não existe processamento visual/compressão de Thumbnails e Marca D'água. No banco, os metadados `url_storage` (usado para download em alta) e `thumbnail_url` (usado para grid) recebem e apontam para a mesma URL pública do Supabase.
-*   **Clean Up (Cascata e Storage):** Se o fotógrafo exclui uma única foto ou deleta a galeria inteira, o backend apaga o registro do banco de dados e executa uma requisição para **excluir permanentemente o arquivo original** de dentro do Bucket do Supabase, evitando custos de armazenamento de arquivos órfãos.
+*   **Fluxo de Salvamento Seguro (Disco e Paralelismo):** Devido ao peso de vídeos e fotos 4K, o sistema utiliza o `diskStorage` do Multer (salvando temporariamente na pasta do SO). O Service de fotos faz o upload para o **Supabase Storage** em **lotes paralelos controlados** (ex: 5 por vez), carregando para a memória (`fs.promises.readFile`) pontualmente e deletando do disco local logo em seguida (`fs.unlinkSync`). Isso garante máxima escalabilidade sem risco de crash (*Heap Out Of Memory*).
+*   **Thumbnail vs Alta Resolução:** Atualmente não existe processamento visual/compressão de Thumbnails e Marca D'água. No banco, os metadados `url_storage` e `thumbnail_url` apontam para a mesma URL pública do Supabase.
+*   **Clean Up Eficiente:** Se o fotógrafo exclui uma única foto ou deleta a galeria inteira, o backend apaga o registro do banco de dados e executa a exclusão permanentemente do arquivo no Supabase Storage. Exclusões em massa de galerias são feitas também em **lotes paralelos** (ex: 10 por vez) para evitar Timeout HTTP no frontend.
 
 ---
 

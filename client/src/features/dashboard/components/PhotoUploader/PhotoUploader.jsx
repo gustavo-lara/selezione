@@ -7,17 +7,17 @@ export function PhotoUploader({ uploading, onFileChange }) {
       <input
         type="file"
         multiple
-        accept="image/*"
+        accept="image/*,video/*"
         onChange={onFileChange}
         disabled={uploading}
         
       />
       <Upload size={36} color={uploading ? 'var(--color-mark-red)' : 'var(--color-ink)'}  />
       <h3 >
-        {uploading ? 'Enviando fotos para a Galeria...' : 'Arraste ou clique para enviar fotos deste ensaio'}
+        {uploading ? 'Enviando arquivos para a Galeria...' : 'Arraste ou clique para enviar fotos e vídeos deste ensaio'}
       </h3>
       <p >
-        SUPORTA JPEG, PNG, WEBP ATÉ 25MB POR FOTO
+        SUPORTA IMAGENS E VÍDEOS DE ALTA RESOLUÇÃO
       </p>
     </div>
   );

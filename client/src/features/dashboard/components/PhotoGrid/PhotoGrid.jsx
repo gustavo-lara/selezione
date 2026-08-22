@@ -2,6 +2,11 @@ import React from 'react';
 import { Trash2 } from 'lucide-react';
 
 export function PhotoGrid({ fotos, activeTab, onDeleteFoto }) {
+  const isVideo = (url) => {
+    if (!url) return false;
+    const lowerUrl = url.toLowerCase();
+    return lowerUrl.endsWith('.mp4') || lowerUrl.endsWith('.webm') || lowerUrl.endsWith('.mov');
+  };
   if (fotos.length === 0) {
     return (
       <div >
@@ -24,11 +29,18 @@ export function PhotoGrid({ fotos, activeTab, onDeleteFoto }) {
           </div>
 
           <div >
-            <img
-              src={foto.url_storage}
-              alt="Foto do ensaio"
-              
-            />
+            {isVideo(foto.url_storage) ? (
+              <video
+                src={foto.url_storage}
+                controls
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              />
+            ) : (
+              <img
+                src={foto.url_storage}
+                alt="Foto do ensaio"
+              />
+            )}
 
             <button
               onClick={(e) => onDeleteFoto(foto.id, e)}

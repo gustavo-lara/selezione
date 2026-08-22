@@ -20,9 +20,10 @@ router.post('/nova-selecao', ensureAuthenticated, Controller.create);
 
 Como o projeto lida com fotografias, o upload é uma parte sensível e exige cuidado com o consumo de memória e armazenamento.
 
-*   **Memória RAM (Buffer):** O `multer` está configurado com `memoryStorage()`. Isso significa que **os arquivos não são salvos no disco local do servidor**. Eles ficam em memória (`req.file.buffer` ou `req.files`) para serem enviados diretamente para um Storage externo (como S3, Supabase Storage, etc).
-*   **Regra de Armazenamento:** Agentes de IA **nunca** devem tentar usar o pacote `fs` para ler, escrever ou salvar imagens no sistema de arquivos local (`diskStorage`).
-*   **Limites e Filtros:** O middleware aceita apenas imagens (JPEG, PNG, WEBP, HEIC) e possui um limite fixo de tamanho (ex: 25MB por arquivo).
+*   **Uso Seguro de Disco (`diskStorage`):** Como agora suportamos vídeos grandes e fotos 4K ilimitadas, o `multer` está configurado exclusivamente com `diskStorage()`. Arquivos são salvos momentaneamente no diretório temporário do sistema operacional (`os.tmpdir()`).
+*   **Regra de Armazenamento:** Agentes de IA **devem obrigatoriamente** usar o pacote `fs` (preferencialmente `fs.promises`) apenas para ler o arquivo salvo pelo multer e, **crucialmente**, excluí-lo logo em seguida (`fs.unlinkSync` ou `await unlink`) para evitar o acúmulo de lixo no servidor. Nunca se deve guardar arquivos estáticos permanentes no disco local do backend.
+*   **Limites e Filtros Flexíveis:** O middleware aceita imagens (`JPEG`, `PNG`, `WEBP`, `HEIC`) e também vídeos (`MP4`, `WEBM`, `MOV`). Não há limite estrito de tamanho por arquivo (limite de 25MB foi removido), deixando a responsabilidade do bloqueio para as regras de negócio de "Cota da Galeria" nos Controllers.
+*   **Concorrência (Lotes):** Envios de arrays extensos para o Storage externo DEVEM ser paralelizados com controle de concorrência (ex: 5 requisições por vez) em vez de todos simultaneamente ou em um `for` síncrono.
 
 Exemplo de uso na rota:
 ```javascript

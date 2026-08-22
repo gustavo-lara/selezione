@@ -14,7 +14,7 @@ const router = Router();
 router.get('/public/:slug/fotos', listPublicFotos);
 
 // Rotas protegidas (autenticadas para fotógrafos)
-router.post('/galerias/:galeriaId/fotos', ensureAuthenticated, upload.array('fotos', 30), uploadFotos);
+router.post('/galerias/:galeriaId/fotos', ensureAuthenticated, upload.array('fotos', 200), uploadFotos);
 router.get('/galerias/:galeriaId/fotos', ensureAuthenticated, listMyGaleriaFotos);
 router.delete('/fotos/:id', ensureAuthenticated, removeFoto);
 

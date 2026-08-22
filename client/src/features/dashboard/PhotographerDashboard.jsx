@@ -197,28 +197,39 @@ export function PhotographerDashboard() {
   };
 
   const handleFileUpload = async (e) => {
-    const files = e.target.files;
+    const files = Array.from(e.target.files);
     if (!files || files.length === 0 || !selectedGaleria) return;
 
     setUploading(true);
-    const formData = new FormData();
-    for (let i = 0; i < files.length; i++) {
-      formData.append('fotos', files[i]);
-    }
-
+    const BATCH_SIZE = 100;
+    
     try {
-      await http.post(`/api/galerias/${selectedGaleria.id}/fotos`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
+      // Divide os arquivos em lotes (chunks) de 100
+      for (let i = 0; i < files.length; i += BATCH_SIZE) {
+        const chunk = files.slice(i, i + BATCH_SIZE);
+        const formData = new FormData();
+        
+        for (let j = 0; j < chunk.length; j++) {
+          formData.append('fotos', chunk[j]);
+        }
+
+        // Aguarda o envio de cada lote para não sobrecarregar o servidor
+        await http.post(`/api/galerias/${selectedGaleria.id}/fotos`, formData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
+      }
+
       showToast(`${files.length} foto(s) enviada(s) com sucesso!`);
       fetchGaleriaFotos(selectedGaleria.id);
-      fetchGalerias(); // para atualizar os bytes usados no backend e depois atualizamos a local se precisar
+      fetchGalerias(); // para atualizar os bytes usados no backend e depois atualizamos a local
     } catch (err) {
       console.error('Erro no upload de fotos:', err);
-      const msg = err.response?.data?.error || 'Falha ao enviar fotos.';
+      const msg = err.response?.data?.error || 'Falha ao enviar fotos. Parte do envio pode ter falhado.';
       alert(msg);
     } finally {
       setUploading(false);
+      // Limpa o input para garantir que o evento onChange dispare caso o usuário selecione os mesmos arquivos
+      e.target.value = null;
     }
   };
 
