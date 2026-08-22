@@ -3,6 +3,7 @@ import {
   create,
   listMyGalerias,
   getPublicBySlug,
+  update,
   remove
 } from './galeria.controller.js';
 import { ensureAuthenticated } from '../../middlewares/auth.middleware.js';
@@ -15,6 +16,7 @@ router.get('/public/:slug', getPublicBySlug);
 // Rotas protegidas (exigem fotógrafo autenticado)
 router.post('/', ensureAuthenticated, create);
 router.get('/', ensureAuthenticated, listMyGalerias);
+router.put('/:id', ensureAuthenticated, update);
 router.delete('/:id', ensureAuthenticated, remove);
 
 export default router;

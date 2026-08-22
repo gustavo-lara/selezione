@@ -1,6 +1,9 @@
 import React from 'react';
 
-export function GalleryCreateModal({ isOpen, novoNome, creating, onChange, onSubmit, onClose }) {
+export function GalleryCreateModal({ 
+  isOpen, novoNome, novaCota, armazenamentoLivreBytes, creating, 
+  onChange, onChangeCota, onSubmit, onClose, formatBytes 
+}) {
   if (!isOpen) return null;
 
   return (
@@ -36,6 +39,29 @@ export function GalleryCreateModal({ isOpen, novoNome, creating, onChange, onSub
                 fontFamily: 'var(--font-sans)', fontSize: '0.9rem'
               }}
             />
+          </div>
+
+          <div style={{ marginBottom: '2rem' }}>
+            <label style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', fontWeight: 600, marginBottom: '0.4rem' }}>
+              <span>Cota de Armazenamento para a Galeria</span>
+              <span>{novaCota} MB</span>
+            </label>
+            <input
+              type="range"
+              min="0"
+              max={Math.max(1, Math.floor(armazenamentoLivreBytes / (1024 * 1024)))}
+              step="1"
+              value={novaCota}
+              onChange={(e) => {
+                const val = parseInt(e.target.value, 10);
+                onChangeCota({ target: { value: Math.max(1, val) } });
+              }}
+              style={{ width: '100%', accentColor: 'var(--color-mark)' }}
+            />
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.5rem', fontSize: '0.75rem', color: 'var(--color-warm-grey)' }}>
+               <span>Mínimo: 1 MB</span>
+               <span>Livre: {formatBytes(armazenamentoLivreBytes)}</span>
+            </div>
           </div>
 
           <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end' }}>

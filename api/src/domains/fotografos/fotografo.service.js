@@ -11,10 +11,24 @@ export const findFotografoByEmail = async (email) => {
 
 export const findFotografoById = async (id) => {
   const result = await query(
-    'SELECT id, nome, email, created_at FROM fotografos WHERE id = $1;',
+    `SELECT 
+      f.id, f.nome, f.email, f.created_at, f.plano, f.armazenamento_total_bytes,
+      (f.armazenamento_total_bytes - COALESCE(SUM(g.tamanho_alocado_bytes), 0))::bigint AS armazenamento_livre_bytes
+    FROM fotografos f
+    LEFT JOIN galerias g ON f.id = g.fotografo_id
+    WHERE f.id = $1
+    GROUP BY f.id;`,
     [id]
   );
-  return result.rows[0] || null;
+  
+  if (!result.rows[0]) return null;
+  
+  const user = result.rows[0];
+  return {
+    ...user,
+    armazenamento_total_bytes: parseInt(user.armazenamento_total_bytes, 10),
+    armazenamento_livre_bytes: parseInt(user.armazenamento_livre_bytes, 10)
+  };
 };
 
 export const createFotografo = async ({ nome, email, senha }) => {

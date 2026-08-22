@@ -21,16 +21,16 @@ async function runMigration() {
   });
 
   try {
-    const migrationPath = path.resolve('../db/migrations/001_initial_schema.sql');
-    
-    if (!fs.existsSync(migrationPath)) {
-      throw new Error(`Arquivo de migração não encontrado em: ${migrationPath}`);
-    }
-
-    const sql = fs.readFileSync(migrationPath, 'utf8');
+    const migrationsDir = path.resolve('../db/migrations');
+    const files = fs.readdirSync(migrationsDir).filter(f => f.endsWith('.sql')).sort();
     
     const client = await pool.connect();
-    await client.query(sql);
+    
+    for (const file of files) {
+      console.log(`Executando migração: ${file}`);
+      const sql = fs.readFileSync(path.join(migrationsDir, file), 'utf8');
+      await client.query(sql);
+    }
     
     console.log('MIGRAÇÃO CONCLUÍDA COM SUCESSO!');
     

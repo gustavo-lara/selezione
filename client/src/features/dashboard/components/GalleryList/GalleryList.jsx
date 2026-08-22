@@ -2,7 +2,7 @@ import React from 'react';
 import { Plus, Image as ImageIcon } from 'lucide-react';
 import { GalleryCard } from '../GalleryCard/GalleryCard.jsx';
 
-export function GalleryList({ galerias, loading, onOpen, onCopyLink, onDelete, onNewGallery }) {
+export function GalleryList({ galerias, loading, onOpen, onCopyLink, onDelete, onNewGallery, formatBytes }) {
   if (loading) {
     return (
       <div style={{ textAlign: 'center', padding: '4rem 0', fontFamily: 'var(--font-mono)', color: 'var(--color-warm-grey)' }}>
@@ -47,6 +47,7 @@ export function GalleryList({ galerias, loading, onOpen, onCopyLink, onDelete, o
           onOpen={onOpen}
           onCopyLink={onCopyLink}
           onDelete={onDelete}
+          formatBytes={formatBytes}
         />
       ))}
     </div>

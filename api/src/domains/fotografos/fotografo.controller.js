@@ -31,14 +31,11 @@ export const register = async (req, res) => {
       { expiresIn: '7d' }
     );
 
+    const fullUser = await findFotografoById(newFotografo.id);
+
     return res.status(201).json({
       message: 'Fotógrafo cadastrado com sucesso',
-      user: {
-        id: newFotografo.id,
-        nome: newFotografo.nome,
-        email: newFotografo.email,
-        created_at: newFotografo.created_at
-      },
+      user: fullUser,
       token
     });
   } catch (error) {
@@ -73,14 +70,11 @@ export const login = async (req, res) => {
       { expiresIn: '7d' }
     );
 
+    const fullUser = await findFotografoById(fotografo.id);
+
     return res.status(200).json({
       message: 'Login realizado com sucesso',
-      user: {
-        id: fotografo.id,
-        nome: fotografo.nome,
-        email: fotografo.email,
-        created_at: fotografo.created_at
-      },
+      user: fullUser,
       token
     });
   } catch (error) {
@@ -115,9 +109,11 @@ export const updateProfile = async (req, res) => {
       return res.status(404).json({ error: 'Fotógrafo não encontrado' });
     }
 
+    const fullUser = await findFotografoById(updatedUser.id);
+
     return res.status(200).json({
       message: 'Nome do estúdio atualizado com sucesso',
-      user: updatedUser
+      user: fullUser
     });
   } catch (error) {
     console.error('Erro ao atualizar nome do fotógrafo:', error);

@@ -21,6 +21,14 @@ export const uploadFotos = async (req, res) => {
       return res.status(404).json({ error: 'Galeria não encontrada ou sem permissão para upload' });
     }
 
+    const newFilesSize = req.files.reduce((acc, file) => acc + file.size, 0);
+    const { getGaleriaUsedSpace } = await import('../galerias/galeria.service.js');
+    const usedSpace = await getGaleriaUsedSpace(galeriaId);
+
+    if (usedSpace + newFilesSize > galeria.tamanho_alocado_bytes) {
+      return res.status(400).json({ error: 'Espaço insuficiente na galeria para estas fotos' });
+    }
+
     const fotos = await saveUploadedFotos({ galeriaId, files: req.files });
 
     return res.status(201).json({

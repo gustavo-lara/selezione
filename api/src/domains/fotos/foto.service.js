@@ -21,10 +21,10 @@ export const saveUploadedFotos = async ({ galeriaId, files }) => {
 
     // Inserção do metadado no banco PostgreSQL
     const result = await query(
-      `INSERT INTO fotos (galeria_id, url_storage, thumbnail_url, ordem)
-       VALUES ($1, $2, $3, $4)
-       RETURNING id, galeria_id, url_storage, thumbnail_url, ordem, created_at;`,
-      [galeriaId, publicUrl, publicUrl, i]
+      `INSERT INTO fotos (galeria_id, url_storage, thumbnail_url, ordem, tamanho_arquivo_bytes)
+       VALUES ($1, $2, $3, $4, $5)
+       RETURNING id, galeria_id, url_storage, thumbnail_url, ordem, tamanho_arquivo_bytes, created_at;`,
+      [galeriaId, publicUrl, publicUrl, i, file.size]
     );
 
     savedFotos.push(result.rows[0]);
@@ -41,6 +41,7 @@ export const getFotosByGaleriaId = async (galeriaId) => {
        f.url_storage,
        f.thumbnail_url,
        f.ordem,
+       f.tamanho_arquivo_bytes,
        f.created_at,
        COALESCE(s.aprovado, false) AS selecionada
      FROM fotos f
@@ -50,7 +51,10 @@ export const getFotosByGaleriaId = async (galeriaId) => {
     [galeriaId]
   );
 
-  return result.rows;
+  return result.rows.map(row => ({
+     ...row,
+     tamanho_arquivo_bytes: parseInt(row.tamanho_arquivo_bytes, 10)
+  }));
 };
 
 export const getFotosByGaleriaSlug = async (slug) => {

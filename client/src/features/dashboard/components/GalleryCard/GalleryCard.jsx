@@ -1,7 +1,7 @@
 import React from 'react';
 import { Copy, Trash2 } from 'lucide-react';
 
-export function GalleryCard({ galeria, onOpen, onCopyLink, onDelete }) {
+export function GalleryCard({ galeria, onOpen, onCopyLink, onDelete, formatBytes }) {
   return (
     <div
       onClick={() => onOpen(galeria)}
@@ -44,6 +44,22 @@ export function GalleryCard({ galeria, onOpen, onCopyLink, onDelete }) {
           <strong style={{ fontSize: '1rem', color: 'var(--color-mark-red)' }}>{galeria.total_selecionadas || 0}</strong>
         </div>
       </div>
+
+      {galeria.tamanho_alocado_bytes > 0 && formatBytes && (
+        <div style={{ marginBottom: '1.25rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: 'var(--color-warm-grey)', marginBottom: '0.35rem' }}>
+            <span>Uso da Galeria</span>
+            <span>{formatBytes(galeria.tamanho_usado_bytes || 0)} / {formatBytes(galeria.tamanho_alocado_bytes)}</span>
+          </div>
+          <div style={{ width: '100%', height: '4px', backgroundColor: 'var(--color-paper-muted)', borderRadius: '2px', overflow: 'hidden' }}>
+            <div style={{ 
+              width: `${((galeria.tamanho_usado_bytes || 0) / galeria.tamanho_alocado_bytes) * 100}%`, 
+              height: '100%', 
+              backgroundColor: ((galeria.tamanho_usado_bytes || 0) / galeria.tamanho_alocado_bytes) > 0.9 ? 'var(--color-mark-red)' : 'var(--color-mark)' 
+            }} />
+          </div>
+        </div>
+      )}
 
       <div style={{ display: 'flex', gap: '0.5rem' }}>
         <button
