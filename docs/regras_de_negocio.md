@@ -72,8 +72,12 @@ Este documento é a "fonte da verdade" do comportamento atual e servirá de base
 
 ## 5. Visualização e Exportação (Visão do Fotógrafo)
 
-*   **Listagem (Dashboard):** A API `getGaleriasByFotografo` retorna a lista de galerias do fotógrafo com estatísticas integradas (join/count): número exato de fotos totais (`total_fotos`) e o exato número de fotos já marcadas como selecionadas no momento (`total_selecionadas`).
-*   **Detalhamento da Galeria:** O fotógrafo consegue consultar a rota `listGaleriaSelecoes` para ver uma listagem contendo apenas as fotos onde `aprovado = true`.
+*   **Estrutura de Rotas (Dashboard SaaS):** O painel do fotógrafo é dividido em sub-rotas para suportar o modelo Freemium:
+    *   `/dashboard`: Lista todas as galerias com métricas globais de armazenamento (`armazenamento_total_bytes` vs `tamanho_alocado_bytes`).
+    *   `/dashboard/galeria/:id`: Gerenciamento isolado da galeria (upload, status, cota individual, abas de seleção).
+    *   `/dashboard/configuracoes`: Perfil do estúdio e base para futura gestão de planos.
+*   **Listagem (Dashboard Home):** A API `getGaleriasByFotografo` retorna a lista de galerias do fotógrafo com estatísticas integradas (join/count): número exato de fotos totais (`total_fotos`) e o exato número de fotos já marcadas como selecionadas no momento (`total_selecionadas`).
+*   **Detalhamento da Galeria:** O fotógrafo consegue acessar uma galeria específica e consultar a rota `listGaleriaSelecoes` para ver uma listagem contendo apenas as fotos onde `aprovado = true`.
 *   **Exportação:** Ainda não há geração de arquivos CSV, nomes de arquivos RAW separados por vírgula para pesquisa no Lightroom, ou geração de arquivos ZIP para baixar em alta resolução. Todo o controle ocorre visualmente.
 
 ---
