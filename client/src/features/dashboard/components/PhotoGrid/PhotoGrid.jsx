@@ -1,5 +1,5 @@
 import React from 'react';
-import { Trash2 } from 'lucide-react';
+
 
 export function PhotoGrid({ fotos, activeTab, onDeleteFoto }) {
   const isVideo = (url) => {
@@ -33,7 +33,7 @@ export function PhotoGrid({ fotos, activeTab, onDeleteFoto }) {
               <video
                 src={foto.url_storage}
                 controls
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+               
               />
             ) : (
               <img
@@ -47,7 +47,7 @@ export function PhotoGrid({ fotos, activeTab, onDeleteFoto }) {
               
               title="Excluir Foto"
             >
-              <Trash2 size={14} />
+              
             </button>
           </div>
         </div>

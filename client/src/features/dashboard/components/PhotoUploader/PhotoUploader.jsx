@@ -1,5 +1,5 @@
 import React from 'react';
-import { Upload } from 'lucide-react';
+
 
 export function PhotoUploader({ uploading, onFileChange }) {
   return (
@@ -12,7 +12,7 @@ export function PhotoUploader({ uploading, onFileChange }) {
         disabled={uploading}
         
       />
-      <Upload size={36} color={uploading ? 'var(--color-mark-red)' : 'var(--color-ink)'}  />
+      
       <h3 >
         {uploading ? 'Enviando arquivos para a Galeria...' : 'Arraste ou clique para enviar fotos e vídeos deste ensaio'}
       </h3>

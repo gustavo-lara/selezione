@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowLeft, ArrowRight, X, Heart } from 'lucide-react';
+
 
 export function PhotoLightbox({ fotos, activeIndex, onClose, onNext, onPrev, onToggleSelecao }) {
   if (activeIndex === null || !fotos[activeIndex]) return null;
@@ -22,9 +22,7 @@ export function PhotoLightbox({ fotos, activeIndex, onClose, onNext, onPrev, onT
         <button
           onClick={onClose}
           
-        >
-          <X size={28} />
-        </button>
+        >Fechar</button>
       </div>
 
       <div
@@ -48,7 +46,7 @@ export function PhotoLightbox({ fotos, activeIndex, onClose, onNext, onPrev, onT
           
           
         >
-          <ArrowLeft size={16} /> <span >Anterior</span>
+           <span >Anterior</span>
         </button>
 
         <button
@@ -56,7 +54,7 @@ export function PhotoLightbox({ fotos, activeIndex, onClose, onNext, onPrev, onT
           
           
         >
-          <Heart size={16} fill={foto.selecionada ? "#FFFFFF" : "none"} />
+          
           {foto.selecionada ? 'DESMARCAR' : 'SELECIONAR'}
         </button>
 
@@ -66,7 +64,7 @@ export function PhotoLightbox({ fotos, activeIndex, onClose, onNext, onPrev, onT
           
           
         >
-          <span >Próxima</span> <ArrowRight size={16} />
+          <span >Próxima</span> 
         </button>
       </div>
     </div>

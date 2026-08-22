@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Camera, ArrowLeft } from 'lucide-react';
+
 import { http } from '../../services/http.js';
 import { GalleryHeader } from './components/GalleryHeader/GalleryHeader.jsx';
 import { PhotoGrid } from './components/PhotoGrid/PhotoGrid.jsx';
@@ -132,7 +132,7 @@ export function PublicGallery() {
   if (error || !galeria) {
     return (
       <div >
-        <Camera size={48} color="var(--color-mark-red)"  />
+        
         <h2 >
           {error === 'Esta galeria está indisponível no momento.' ? 'Galeria Indisponível' : 'Galeria Não Encontrada'}
         </h2>
@@ -140,7 +140,7 @@ export function PublicGallery() {
           {error || 'O link que você acessou não existe ou foi desativado.'}
         </p>
         <button onClick={() => navigate('/')} >
-          <ArrowLeft size={16} /> Voltar à Página Inicial
+           Voltar à Página Inicial
         </button>
       </div>
     );

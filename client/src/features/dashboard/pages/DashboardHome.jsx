@@ -134,31 +134,31 @@ export function DashboardHome() {
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
       <Toast message={toastMsg} />
       
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem 1rem' }}>
+      <div>
         <div>
-          <h1 style={{ fontSize: '2rem', marginBottom: '1.5rem', color: 'var(--color-ink)' }}>
+          <h1>
             Seus Ensaios Fotográficos
           </h1>
 
           {currentUser && currentUser.armazenamento_total_bytes > 0 && (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
-              <div style={{ background: 'var(--color-paper)', padding: '1.5rem', borderRadius: '8px', border: '1px solid var(--color-warm-grey-light)' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                  <span style={{ color: 'var(--color-warm-grey)' }}>Cota Distribuída</span>
-                  <span style={{ fontWeight: 600 }}>{formatBytes(totalDistribuido)} / {formatBytes(currentUser.armazenamento_total_bytes)}</span>
+            <div>
+              <div>
+                <div>
+                  <span>Cota Distribuída</span>
+                  <span>{formatBytes(totalDistribuido)} / {formatBytes(currentUser.armazenamento_total_bytes)}</span>
                 </div>
-                <div style={{ width: '100%', height: '8px', background: 'var(--color-warm-grey-light)', borderRadius: '4px', overflow: 'hidden' }}>
-                  <div style={{ width: `${Math.min(100, (totalDistribuido / currentUser.armazenamento_total_bytes) * 100)}%`, height: '100%', background: 'var(--color-mark-red)' }} />
+                <div>
+                  <div />
                 </div>
               </div>
 
-              <div style={{ background: 'var(--color-paper)', padding: '1.5rem', borderRadius: '8px', border: '1px solid var(--color-warm-grey-light)' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                  <span style={{ color: 'var(--color-warm-grey)' }}>Uso Físico Real</span>
-                  <span style={{ fontWeight: 600 }}>{formatBytes(totalFisico)} / {formatBytes(currentUser.armazenamento_total_bytes)}</span>
+              <div>
+                <div>
+                  <span>Uso Físico Real</span>
+                  <span>{formatBytes(totalFisico)} / {formatBytes(currentUser.armazenamento_total_bytes)}</span>
                 </div>
-                <div style={{ width: '100%', height: '8px', background: 'var(--color-warm-grey-light)', borderRadius: '4px', overflow: 'hidden' }}>
-                  <div style={{ width: `${Math.min(100, (totalFisico / currentUser.armazenamento_total_bytes) * 100)}%`, height: '100%', background: 'var(--color-mark-red)' }} />
+                <div>
+                  <div />
                 </div>
               </div>
             </div>

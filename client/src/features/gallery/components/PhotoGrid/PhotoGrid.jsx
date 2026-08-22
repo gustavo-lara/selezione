@@ -1,5 +1,5 @@
 import React from 'react';
-import { Heart, Maximize2 } from 'lucide-react';
+
 
 export function PhotoGrid({ fotos, onSelectPhoto, onToggleSelecao }) {
   if (fotos.length === 0) {
@@ -27,7 +27,7 @@ export function PhotoGrid({ fotos, onSelectPhoto, onToggleSelecao }) {
                 onClick={(e) => onToggleSelecao(foto.id, e)}
                 
               >
-                <Heart size={16} fill={foto.selecionada ? "var(--color-mark-red)" : "none"} color="var(--color-mark-red)" />
+                
                 {foto.selecionada ? 'SELECIONADA' : 'MARCAR'}
               </button>
             </div>
@@ -54,7 +54,7 @@ export function PhotoGrid({ fotos, onSelectPhoto, onToggleSelecao }) {
               )}
 
               <div >
-                <Maximize2 size={12} />
+                
               </div>
             </div>
           </div>

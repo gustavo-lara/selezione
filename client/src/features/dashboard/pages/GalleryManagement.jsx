@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Copy, Eye, EyeOff, Lock } from 'lucide-react';
+
 import { http } from '../../../services/http.js';
 import { useAuth } from '../../../contexts/AuthContext.jsx';
 import { Toast } from '../components/Toast/Toast.jsx';
@@ -236,56 +236,56 @@ export function GalleryManagement() {
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
       <Toast message={toastMsg} />
       
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem 1rem' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', marginBottom: '2rem' }}>
+      <div>
+        <div>
           <div>
-            <span style={{ fontSize: '0.75rem', fontWeight: 600, letterSpacing: '0.05em', color: 'var(--color-mark-red)', textTransform: 'uppercase' }}>
+            <span>
               GERENCIADOR DE GALERIA
             </span>
-            <h1 style={{ fontSize: '2rem', margin: '0.5rem 0', color: 'var(--color-ink)' }}>
+            <h1>
               {galeria.nome}
             </h1>
-            <p style={{ fontSize: '0.875rem', color: 'var(--color-warm-grey)', margin: 0 }}>
+            <p>
               LINK PÚBLICO: {window.location.origin}/galeria/{galeria.link_publico}
             </p>
           </div>
 
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'center' }}>
+          <div>
             {galeria.tamanho_alocado_bytes > 0 && (
-              <div style={{ background: 'var(--color-paper)', padding: '0.75rem 1rem', borderRadius: '4px', border: '1px solid var(--color-warm-grey-light)', minWidth: '250px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.875rem' }}>
-                  <span style={{ color: 'var(--color-warm-grey)' }}>Uso da Galeria:</span>
-                  <span style={{ fontWeight: 600 }}>{formatBytes(galeria.tamanho_usado_bytes)} / {formatBytes(galeria.tamanho_alocado_bytes)}</span>
+              <div>
+                <div>
+                  <span>Uso da Galeria:</span>
+                  <span>{formatBytes(galeria.tamanho_usado_bytes)} / {formatBytes(galeria.tamanho_alocado_bytes)}</span>
                 </div>
-                <div style={{ width: '100%', height: '6px', background: 'var(--color-warm-grey-light)', borderRadius: '3px', overflow: 'hidden' }}>
-                    <div style={{ width: `${Math.min(100, (galeria.tamanho_usado_bytes / galeria.tamanho_alocado_bytes) * 100)}%`, height: '100%', background: 'var(--color-mark-red)' }} />
+                <div>
+                    <div />
                 </div>
               </div>
             )}
             
             <button
               onClick={handleOpenEditGaleria}
-              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'transparent', color: 'var(--color-ink)', padding: '0.5rem 1rem', borderRadius: '4px', border: '1px solid var(--color-warm-grey-light)', cursor: 'pointer', transition: 'all 0.2s' }}
+             
             >
               Editar Cota
             </button>
             <button
               onClick={handleOpenPasswordModal}
-              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'transparent', color: 'var(--color-ink)', padding: '0.5rem 1rem', borderRadius: '4px', border: '1px solid var(--color-warm-grey-light)', cursor: 'pointer', transition: 'all 0.2s' }}
+             
             >
-              <Lock size={16} /> Senha
+               Senha
             </button>
             <button
               onClick={() => copyPublicLink(galeria.link_publico)}
-              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'transparent', color: 'var(--color-ink)', padding: '0.5rem 1rem', borderRadius: '4px', border: '1px solid var(--color-warm-grey-light)', cursor: 'pointer', transition: 'all 0.2s' }}
+             
             >
-              <Copy size={16} /> Copiar Link do Cliente
+               Copiar Link do Cliente
             </button>
             <button
               onClick={handleToggleStatus}
-              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--color-ink)', color: 'var(--color-paper)', padding: '0.5rem 1rem', borderRadius: '4px', border: 'none', cursor: 'pointer', transition: 'all 0.2s' }}
+             
             >
-              {galeria.is_active ? <Eye size={16} /> : <EyeOff size={16} />}
+
               {galeria.is_active ? 'Ocultar' : 'Disponibilizar'}
             </button>
           </div>

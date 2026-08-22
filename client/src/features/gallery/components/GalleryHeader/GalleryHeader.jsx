@@ -1,12 +1,12 @@
 import React from 'react';
-import { Camera, Heart, Send } from 'lucide-react';
+
 
 export function GalleryHeader({ galeria, selectedCount, totalFotos, onSubmit }) {
   return (
     <header  >
       <div >
         <div >
-          <Camera size={18} />
+          
         </div>
         <div>
           <span  >GALERIA DE SELEÇÃO</span>
@@ -18,7 +18,7 @@ export function GalleryHeader({ galeria, selectedCount, totalFotos, onSubmit }) 
 
       <div >
         <div >
-          <Heart size={14} color="var(--color-mark-red)" fill={selectedCount > 0 ? "var(--color-mark-red)" : "none"} />
+          
           <strong>{selectedCount}</strong> / {totalFotos} <span >SELECIONADAS</span>
         </div>
 
@@ -28,7 +28,7 @@ export function GalleryHeader({ galeria, selectedCount, totalFotos, onSubmit }) 
           
           
         >
-          <Send size={15} /> Confirmar <span >Seleção</span>
+           Confirmar <span >Seleção</span>
         </button>
       </div>
     </header>

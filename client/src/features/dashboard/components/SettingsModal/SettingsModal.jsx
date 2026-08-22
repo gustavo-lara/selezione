@@ -1,5 +1,5 @@
 import React from 'react';
-import { Settings } from 'lucide-react';
+
 
 export function SettingsModal({ isOpen, studioName, saving, onChange, onSubmit, onClose }) {
   if (!isOpen) return null;
@@ -8,7 +8,7 @@ export function SettingsModal({ isOpen, studioName, saving, onChange, onSubmit, 
     <div >
       <div >
         <div >
-          <Settings size={20} color="var(--color-mark-red)" />
+          
           <h3 >
             Configurações do Estúdio
           </h3>

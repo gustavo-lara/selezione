@@ -1,5 +1,5 @@
 import React from 'react';
-import { Camera, Plus, ArrowLeft, Settings, LogOut } from 'lucide-react';
+
 
 export function DashboardHeader({ currentUser, selectedGaleria, onBack, onNewGallery, onSettings, onLogout }) {
   return (
@@ -12,12 +12,12 @@ export function DashboardHeader({ currentUser, selectedGaleria, onBack, onNewGal
               
               
             >
-              <ArrowLeft size={16} /> <span >Voltar</span>
+               <span >Voltar</span>
             </button>
           )}
           <div >
             <div >
-              <Camera size={18} />
+              
             </div>
             <div >
               <span >
@@ -37,7 +37,7 @@ export function DashboardHeader({ currentUser, selectedGaleria, onBack, onNewGal
               
               
             >
-              <Plus size={16} /> <span >Nova Galeria</span>
+               <span >Nova Galeria</span>
             </button>
           )}
           <button
@@ -45,17 +45,13 @@ export function DashboardHeader({ currentUser, selectedGaleria, onBack, onNewGal
             
             
             title="Configurações do Estúdio"
-          >
-            <Settings size={16} />
-          </button>
+          >Configurações do Estúdio</button>
           <button
             onClick={onLogout}
             
             
             title="Sair do Sistema"
-          >
-            <LogOut size={16} />
-          </button>
+          >Sair do Sistema</button>
         </div>
       </div>
     </header>

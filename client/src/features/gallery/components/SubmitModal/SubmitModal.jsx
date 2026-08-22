@@ -1,5 +1,5 @@
 import React from 'react';
-import { Send, CheckCircle2 } from 'lucide-react';
+
 
 export function SubmitModal({ isOpen, submitted, selectedCount, onClose, onConfirm }) {
   if (!isOpen) return null;
@@ -10,7 +10,7 @@ export function SubmitModal({ isOpen, submitted, selectedCount, onClose, onConfi
         {!submitted ? (
           <>
             <div >
-              <Send size={28} />
+              
             </div>
             <h3 >
               Confirmar Seleção Final?
@@ -31,7 +31,7 @@ export function SubmitModal({ isOpen, submitted, selectedCount, onClose, onConfi
         ) : (
           <>
             <div >
-              <CheckCircle2 size={36} />
+              
             </div>
             <h3 >
               Escolha recebida.

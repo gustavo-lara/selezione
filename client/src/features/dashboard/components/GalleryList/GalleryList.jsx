@@ -1,5 +1,5 @@
 import React from 'react';
-import { Plus, Image as ImageIcon } from 'lucide-react';
+
 import { GalleryCard } from '../GalleryCard/GalleryCard.jsx';
 
 export function GalleryList({ galerias, loading, onOpen, onCopyLink, onDelete, onToggleStatus, onNewGallery, formatBytes }) {
@@ -14,7 +14,7 @@ export function GalleryList({ galerias, loading, onOpen, onCopyLink, onDelete, o
   if (galerias.length === 0) {
     return (
       <div >
-        <ImageIcon size={48} color="var(--color-warm-grey)"  />
+        
         <h3 >
           Nenhuma entrega ainda.
         </h3>
@@ -22,7 +22,7 @@ export function GalleryList({ galerias, loading, onOpen, onCopyLink, onDelete, o
           Comece pela primeira.
         </p>
         <button onClick={onNewGallery} >
-          <Plus size={18} /> Criar Primeira Galeria
+           Criar Primeira Galeria
         </button>
       </div>
     );
