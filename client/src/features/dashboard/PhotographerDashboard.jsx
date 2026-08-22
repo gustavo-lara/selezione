@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Copy } from 'lucide-react';
+import { Copy, Eye, EyeOff } from 'lucide-react';
 import { http } from '../../services/http.js';
 import { useAuth } from '../../contexts/AuthContext.jsx';
 import { DashboardHeader } from './components/DashboardHeader/DashboardHeader.jsx';
@@ -155,6 +155,21 @@ export function PhotographerDashboard() {
       fetchGalerias();
     } catch (err) {
       console.error('Erro ao excluir galeria:', err);
+    }
+  };
+
+  const handleToggleStatus = async (id, currentStatus) => {
+    try {
+      const newStatus = !currentStatus;
+      await http.patch(`/api/galerias/${id}/status`, { isActive: newStatus });
+      showToast(newStatus ? 'Galeria definida como Disponível.' : 'Galeria definida como Privada.');
+      fetchGalerias();
+      if (selectedGaleria?.id === id) {
+        setSelectedGaleria(prev => ({ ...prev, is_active: newStatus }));
+      }
+    } catch (err) {
+      console.error('Erro ao atualizar status:', err);
+      alert('Falha ao atualizar o status da galeria.');
     }
   };
 
@@ -325,6 +340,7 @@ export function PhotographerDashboard() {
               onOpen={handleOpenGaleria}
               onCopyLink={copyPublicLink}
               onDelete={handleDeleteGaleria}
+              onToggleStatus={handleToggleStatus}
               onNewGallery={handleOpenCreateModal}
               formatBytes={formatBytes}
             />
@@ -366,6 +382,13 @@ export function PhotographerDashboard() {
                   
                 >
                   <Copy size={16} /> Copiar Link do Cliente
+                </button>
+                <button
+                  onClick={() => handleToggleStatus(selectedGaleria.id, selectedGaleria.is_active)}
+                  style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--color-ink)', color: 'var(--color-paper)', padding: '0.5rem 1rem', borderRadius: '4px', border: 'none', cursor: 'pointer', transition: 'all 0.2s' }}
+                >
+                  {selectedGaleria.is_active ? <Eye size={16} /> : <EyeOff size={16} />}
+                  {selectedGaleria.is_active ? 'Ocultar' : 'Disponibilizar'}
                 </button>
               </div>
             </div>

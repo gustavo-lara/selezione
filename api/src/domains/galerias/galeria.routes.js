@@ -4,7 +4,8 @@ import {
   listMyGalerias,
   getPublicBySlug,
   update,
-  remove
+  remove,
+  updateStatus
 } from './galeria.controller.js';
 import { ensureAuthenticated } from '../../middlewares/auth.middleware.js';
 
@@ -18,5 +19,6 @@ router.post('/', ensureAuthenticated, create);
 router.get('/', ensureAuthenticated, listMyGalerias);
 router.put('/:id', ensureAuthenticated, update);
 router.delete('/:id', ensureAuthenticated, remove);
+router.patch('/:id/status', ensureAuthenticated, updateStatus);
 
 export default router;

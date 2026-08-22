@@ -15,3 +15,7 @@ export const updateGaleriaSchema = z.object({
     .int()
     .min(0, 'O tamanho alocado não pode ser negativo')
 });
+
+export const updateGaleriaStatusSchema = z.object({
+  isActive: z.boolean({ required_error: 'O status de visibilidade é obrigatório' })
+});

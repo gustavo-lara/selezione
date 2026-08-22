@@ -1,7 +1,7 @@
 import React from 'react';
-import { Copy, Trash2 } from 'lucide-react';
+import { Copy, Trash2, Eye, EyeOff } from 'lucide-react';
 
-export function GalleryCard({ galeria, onOpen, onCopyLink, onDelete, formatBytes }) {
+export function GalleryCard({ galeria, onOpen, onCopyLink, onDelete, onToggleStatus, formatBytes }) {
   return (
     <div
       onClick={() => onOpen(galeria)}
@@ -41,6 +41,13 @@ export function GalleryCard({ galeria, onOpen, onCopyLink, onDelete, formatBytes
       )}
 
       <div >
+        <button
+          onClick={(e) => { e.stopPropagation(); onToggleStatus(galeria.id, galeria.is_active); }}
+          title={galeria.is_active ? "Ocultar Galeria" : "Publicar Galeria"}
+          style={{ padding: '0.5rem', background: 'transparent', border: '1px solid var(--color-warm-grey-light)', borderRadius: '4px', cursor: 'pointer', color: galeria.is_active ? 'var(--color-ink)' : 'var(--color-warm-grey)' }}
+        >
+          {galeria.is_active ? <Eye size={16} /> : <EyeOff size={16} />}
+        </button>
         <button
           onClick={(e) => { e.stopPropagation(); onCopyLink(galeria.link_publico); }}
           

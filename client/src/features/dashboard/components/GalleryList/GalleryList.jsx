@@ -2,7 +2,7 @@ import React from 'react';
 import { Plus, Image as ImageIcon } from 'lucide-react';
 import { GalleryCard } from '../GalleryCard/GalleryCard.jsx';
 
-export function GalleryList({ galerias, loading, onOpen, onCopyLink, onDelete, onNewGallery, formatBytes }) {
+export function GalleryList({ galerias, loading, onOpen, onCopyLink, onDelete, onToggleStatus, onNewGallery, formatBytes }) {
   if (loading) {
     return (
       <div >
@@ -37,6 +37,7 @@ export function GalleryList({ galerias, loading, onOpen, onCopyLink, onDelete, o
           onOpen={onOpen}
           onCopyLink={onCopyLink}
           onDelete={onDelete}
+          onToggleStatus={onToggleStatus}
           formatBytes={formatBytes}
         />
       ))}

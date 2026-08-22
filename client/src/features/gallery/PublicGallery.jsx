@@ -37,7 +37,11 @@ export function PublicGallery() {
       setFotos(fotosRes.data.fotos || []);
     } catch (err) {
       console.error('Erro ao carregar galeria pública:', err);
-      setError('Galeria não encontrada ou link inválido.');
+      if (err.response && err.response.status === 403) {
+        setError('Esta galeria está indisponível no momento.');
+      } else {
+        setError('Galeria não encontrada ou link inválido.');
+      }
     } finally {
       setLoading(false);
     }
@@ -95,7 +99,7 @@ export function PublicGallery() {
       <div >
         <Camera size={48} color="var(--color-mark-red)"  />
         <h2 >
-          Galeria Não Encontrada
+          {error === 'Esta galeria está indisponível no momento.' ? 'Galeria Indisponível' : 'Galeria Não Encontrada'}
         </h2>
         <p >
           {error || 'O link que você acessou não existe ou foi desativado.'}

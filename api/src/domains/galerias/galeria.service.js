@@ -21,6 +21,7 @@ export const getGaleriasByFotografo = async (fotografoId) => {
        g.nome,
        g.link_publico,
        g.tamanho_alocado_bytes,
+       g.is_active,
        COALESCE(SUM(f.tamanho_arquivo_bytes), 0)::bigint AS tamanho_usado_bytes,
        g.created_at,
        COUNT(DISTINCT f.id)::int AS total_fotos,
@@ -43,7 +44,7 @@ export const getGaleriasByFotografo = async (fotografoId) => {
 
 export const getGaleriaBySlug = async (slug) => {
   const result = await query(
-    `SELECT id, nome, link_publico, created_at
+    `SELECT id, nome, link_publico, is_active, created_at
      FROM galerias
      WHERE link_publico = $1;`,
     [slug]
@@ -54,7 +55,7 @@ export const getGaleriaBySlug = async (slug) => {
 
 export const getGaleriaById = async (id, fotografoId) => {
   const result = await query(
-    `SELECT id, fotografo_id, nome, link_publico, tamanho_alocado_bytes, created_at
+    `SELECT id, fotografo_id, nome, link_publico, tamanho_alocado_bytes, is_active, created_at
      FROM galerias
      WHERE id = $1 AND fotografo_id = $2;`,
     [id, fotografoId]
@@ -99,5 +100,16 @@ export const updateGaleriaStorage = async (id, fotografoId, tamanhoAlocadoBytes)
   if (result.rows[0]) {
     result.rows[0].tamanho_alocado_bytes = parseInt(result.rows[0].tamanho_alocado_bytes, 10);
   }
+  return result.rows[0] || null;
+};
+
+export const updateGaleriaStatus = async (id, fotografoId, isActive) => {
+  const result = await query(
+    `UPDATE galerias
+     SET is_active = $1
+     WHERE id = $2 AND fotografo_id = $3
+     RETURNING id, is_active;`,
+    [isActive, id, fotografoId]
+  );
   return result.rows[0] || null;
 };

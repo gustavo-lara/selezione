@@ -1,4 +1,4 @@
-import { createGaleriaSchema, updateGaleriaSchema } from './galeria.validation.js';
+import { createGaleriaSchema, updateGaleriaSchema, updateGaleriaStatusSchema } from './galeria.validation.js';
 import {
   createGaleria,
   getGaleriasByFotografo,
@@ -6,7 +6,8 @@ import {
   deleteGaleria,
   getGaleriaById,
   getGaleriaUsedSpace,
-  updateGaleriaStorage
+  updateGaleriaStorage,
+  updateGaleriaStatus
 } from './galeria.service.js';
 import { deleteFotosFromStorageByGaleriaId } from '../fotos/foto.service.js';
 import { findFotografoById } from '../fotografos/fotografo.service.js';
@@ -62,6 +63,10 @@ export const getPublicBySlug = async (req, res) => {
 
     if (!galeria) {
       return res.status(404).json({ error: 'Galeria não encontrada' });
+    }
+    
+    if (!galeria.is_active) {
+      return res.status(403).json({ error: 'Galeria indisponível no momento' });
     }
 
     return res.status(200).json({ galeria });
@@ -127,5 +132,29 @@ export const remove = async (req, res) => {
   } catch (error) {
     console.error('Erro ao excluir galeria:', error);
     return res.status(500).json({ error: 'Erro interno ao excluir galeria' });
+  }
+};
+
+export const updateStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const fotografoId = req.user.id;
+    
+    const validation = updateGaleriaStatusSchema.safeParse(req.body);
+    if (!validation.success) {
+      return res.status(400).json({ error: 'Dados inválidos', details: validation.error.errors.map(e => e.message) });
+    }
+
+    const { isActive } = validation.data;
+
+    const galeria = await getGaleriaById(id, fotografoId);
+    if (!galeria) return res.status(404).json({ error: 'Galeria não encontrada' });
+
+    const updatedGaleria = await updateGaleriaStatus(id, fotografoId, isActive);
+    
+    return res.status(200).json({ message: 'Status da galeria atualizado', galeria: updatedGaleria });
+  } catch (error) {
+     console.error('Erro ao atualizar status da galeria:', error);
+     return res.status(500).json({ error: 'Erro interno ao atualizar status da galeria' });
   }
 };
