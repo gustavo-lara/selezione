@@ -28,7 +28,7 @@ Este documento é a "fonte da verdade" do comportamento atual e servirá de base
 *   O backend converte esse nome num *slug* (ex: "Casamento da Maria" vira "casamento-da-maria"), que se torna o `link_publico` definitivo. Esse link é `UNIQUE` (não podem existir duas galerias com o mesmo slug na plataforma).
 
 ### 2.2. Limites e Status Atuais
-*   **Galerias por conta:** Infinito. Não existe bloqueio de plano limitando quantas galerias o fotógrafo pode criar.
+*   **Galerias por conta:** Infinito na quantidade, mas o limite real agora se baseia no armazenamento. A conta do fotógrafo possui um limite total de espaço (`armazenamento_total_bytes`, padrão de 3GB no plano FREE), e o fotógrafo deve distribuir e alocar parte dessa cota (`tamanho_alocado_bytes`) exclusivamente para cada galeria.
 *   **Data de Expiração:** Inexistente. A galeria fica ativa para sempre até ser excluída.
 *   **Status de Fluxo:** Não há um estado de "Finalizada/Fechada". O cliente sempre pode alterar a seleção.
 
@@ -42,8 +42,7 @@ Este documento é a "fonte da verdade" do comportamento atual e servirá de base
 
 ### 3.1. Processamento e Limites Técnicos (Middleware)
 *   **Tipos Permitidos:** O upload (interceptado por Multer) aceita rigorosamente apenas os formatos: `JPEG`, `JPG`, `PNG`, `WEBP` e `HEIC`. O padrão de salvamento caso a extensão original falhe é `.jpg`.
-*   **Tamanho Máximo:** O servidor rejeita qualquer foto individual que ultrapasse **25 MB**.
-*   **Limites de Capacidade (Conta/Galeria):** Não há limite no backend sobre quantas fotos uma galeria pode ter, nem de Gigabytes totais armazenados por fotógrafo.
+*   **Tamanho Máximo e Limites de Capacidade (Conta/Galeria):** Com a introdução do modelo Freemium, o foco passa a ser o limite da conta e da galeria. Cada foto salva registra seu tamanho exato (`tamanho_arquivo_bytes`). O limite de 25MB por foto passará a ser removido no upload, sendo substituído pela verificação do `tamanho_alocado_bytes` da galeria. No escopo maior, o sistema obedece ao plano do fotógrafo (ex: `FREE` com limite de 3GB de `armazenamento_total_bytes`).
 
 ### 3.2. Armazenamento e Exclusão
 *   **Fluxo de Salvamento:** As imagens não são salvas no disco local do servidor. O arquivo sobe para a memória RAM (Buffer) e é enviado por REST API diretamente para um bucket no **Supabase Storage**.
@@ -78,4 +77,4 @@ Este documento é a "fonte da verdade" do comportamento atual e servirá de base
 
 ---
 
-> **Direcionamento Estratégico (SaaS Freemium):** Com essa varredura hiper detalhada, fica claro que a arquitetura atual é 100% focada na **experiência base**. Todas as restrições que farão os usuários pagarem (Ex: Mais de N galerias, processamento de Thumbnails leves + Marca D'água para proteção, Galeria Protegida por Senha, Criação de Pacotes com limites de escolha e Botão de Finalizar Seleção com alertas) ainda precisam ser construídas sobre essa fundação.
+> **Direcionamento Estratégico (SaaS Freemium):** A fundação para o modelo SaaS Freemium começou a ser aplicada com a gestão de cota de armazenamento global da conta e a alocação de espaço por galeria. Próximos passos incluem processamento de Thumbnails leves + Marca D'água para proteção, Galeria Protegida por Senha, Criação de Pacotes com limites de escolha explícitos e o Botão de Finalizar Seleção com alertas.
