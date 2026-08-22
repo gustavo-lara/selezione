@@ -84,11 +84,7 @@ export function PublicGallery() {
 
   if (loading) {
     return (
-      <div style={{
-        minHeight: '100vh', backgroundColor: 'var(--color-paper)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontFamily: 'var(--font-mono)', color: 'var(--color-warm-grey)'
-      }}>
+      <div >
         Carregando...
       </div>
     );
@@ -96,19 +92,15 @@ export function PublicGallery() {
 
   if (error || !galeria) {
     return (
-      <div style={{
-        minHeight: '100vh', backgroundColor: 'var(--color-paper)',
-        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-        padding: '2rem', textAlign: 'center'
-      }}>
-        <Camera size={48} color="var(--color-mark-red)" style={{ marginBottom: '1rem' }} />
-        <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '2rem', marginBottom: '0.5rem' }}>
+      <div >
+        <Camera size={48} color="var(--color-mark-red)"  />
+        <h2 >
           Galeria Não Encontrada
         </h2>
-        <p style={{ color: 'var(--color-warm-grey)', marginBottom: '1.5rem' }}>
+        <p >
           {error || 'O link que você acessou não existe ou foi desativado.'}
         </p>
-        <button onClick={() => navigate('/')} className="btn-primary">
+        <button onClick={() => navigate('/')} >
           <ArrowLeft size={16} /> Voltar à Página Inicial
         </button>
       </div>
@@ -116,7 +108,7 @@ export function PublicGallery() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: 'var(--color-paper)', color: 'var(--color-ink)' }}>
+    <div >
       <GalleryHeader
         galeria={galeria}
         selectedCount={selectedCount}
@@ -124,9 +116,9 @@ export function PublicGallery() {
         onSubmit={() => setIsSubmitModalOpen(true)}
       />
 
-      <main style={{ padding: '1.5rem 1rem', maxWidth: '1200px', margin: '0 auto' }}>
-        <div style={{ marginBottom: '2rem', textAlign: 'center' }}>
-          <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8rem', color: 'var(--color-warm-grey)' }}>
+      <main >
+        <div >
+          <p >
             CLIQUE NO ÍCONE DE CORAÇÃO OU NA FOTO PARA MARCAR SUA ESCOLHA
           </p>
         </div>

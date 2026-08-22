@@ -225,7 +225,7 @@ export function AuthModal({ isOpen, onClose, onSuccess, initialMode = 'login' })
                         type="text"
                         name="nome"
                         required
-                        placeholder="Ex: Gustavo Lara"
+                        placeholder="Ex: Nome do Estúdio"
                         value={formData.nome}
                         onChange={handleChange}
                         style={{ width: '100%', padding: '0.75rem 0', border: 'none', borderBottom: '1px solid #D9D5CC', background: 'transparent', fontFamily: 'var(--font-sans)', fontSize: '1rem', color: '#1A1815', outline: 'none', transition: 'border-color 0.3s' }}

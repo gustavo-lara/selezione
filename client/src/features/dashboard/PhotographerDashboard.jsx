@@ -260,7 +260,7 @@ export function PhotographerDashboard() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-          style={{ minHeight: '100vh', backgroundColor: 'var(--color-paper)', color: 'var(--color-ink)' }}
+          
         >
           <Toast message={toastMsg} />
 
@@ -273,45 +273,35 @@ export function PhotographerDashboard() {
         onLogout={logout}
       />
 
-      <main style={{ padding: '1.5rem 1rem', maxWidth: '1200px', margin: '0 auto' }}>
+      <main >
         {!selectedGaleria ? (
           <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
-              <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.5rem, 5vw, 2.2rem)', marginTop: '0.2rem' }}>
+            <div >
+              <h1 >
                 Seus Ensaios Fotográficos
               </h1>
 
               {currentUser && currentUser.armazenamento_total_bytes > 0 && (
-                <div style={{ 
-                  backgroundColor: 'var(--color-ink)', color: 'var(--color-paper)', 
-                  padding: '1rem', borderRadius: '4px', fontSize: '0.85rem',
-                  display: 'flex', gap: '2rem', flexWrap: 'wrap'
-                }}>
+                <div >
                   {/* Cota Alocada (Distribuída nas galerias) */}
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', flex: '1 1 200px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', gap: '1rem' }}>
-                      <span style={{ color: '#A09D96' }}>Cota Distribuída</span>
-                      <span style={{ fontWeight: 600 }}>{formatBytes(totalDistribuido)} / {formatBytes(currentUser.armazenamento_total_bytes)}</span>
+                  <div >
+                    <div >
+                      <span >Cota Distribuída</span>
+                      <span >{formatBytes(totalDistribuido)} / {formatBytes(currentUser.armazenamento_total_bytes)}</span>
                     </div>
-                    <div style={{ width: '100%', height: '4px', backgroundColor: '#333', borderRadius: '2px', overflow: 'hidden' }}>
-                      <div style={{ 
-                        width: `${(totalDistribuido / currentUser.armazenamento_total_bytes) * 100}%`, 
-                        height: '100%', backgroundColor: 'var(--color-highlight)' 
-                      }} />
+                    <div >
+                      <div  />
                     </div>
                   </div>
 
                   {/* Espaço Físico Real (Ocupado por fotos) */}
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', flex: '1 1 200px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', gap: '1rem' }}>
-                      <span style={{ color: '#A09D96' }}>Uso Físico Real</span>
-                      <span style={{ fontWeight: 600 }}>{formatBytes(totalFisico)} / {formatBytes(currentUser.armazenamento_total_bytes)}</span>
+                  <div >
+                    <div >
+                      <span >Uso Físico Real</span>
+                      <span >{formatBytes(totalFisico)} / {formatBytes(currentUser.armazenamento_total_bytes)}</span>
                     </div>
-                    <div style={{ width: '100%', height: '4px', backgroundColor: '#333', borderRadius: '2px', overflow: 'hidden' }}>
-                      <div style={{ 
-                        width: `${(totalFisico / currentUser.armazenamento_total_bytes) * 100}%`, 
-                        height: '100%', backgroundColor: '#E0DDD3' 
-                      }} />
+                    <div >
+                      <div  />
                     </div>
                   </div>
                 </div>
@@ -330,43 +320,39 @@ export function PhotographerDashboard() {
           </div>
         ) : (
           <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.5rem' }}>
+            <div >
               <div>
-                <span className="frame-tag">GERENCIADOR DE GALERIA</span>
-                <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.6rem, 5vw, 2.4rem)', marginTop: '0.2rem' }}>
+                <span >GERENCIADOR DE GALERIA</span>
+                <h1 >
                   {selectedGaleria.nome}
                 </h1>
-                <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8rem', color: 'var(--color-warm-grey)', wordBreak: 'break-all' }}>
+                <p >
                   LINK PÚBLICO: {window.location.origin}/galeria/{selectedGaleria.link_publico}
                 </p>
               </div>
 
-              <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', alignItems: 'center' }}>
+              <div >
                 {selectedGaleria.tamanho_alocado_bytes > 0 && (
-                  <div style={{ fontSize: '0.85rem', color: 'var(--color-ink)', marginRight: '1rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <span style={{ marginRight: '0.5rem', fontWeight: 500 }}>Uso da Galeria:</span>
+                  <div >
+                    <div >
+                      <span >Uso da Galeria:</span>
                       <span>{formatBytes(selectedGaleria.tamanho_usado_bytes)} / {formatBytes(selectedGaleria.tamanho_alocado_bytes)}</span>
                     </div>
-                    <div style={{ width: '100%', height: '4px', backgroundColor: '#E0DDD3', borderRadius: '2px', overflow: 'hidden' }}>
-                       <div style={{ 
-                         width: `${(selectedGaleria.tamanho_usado_bytes / selectedGaleria.tamanho_alocado_bytes) * 100}%`, 
-                         height: '100%', 
-                         backgroundColor: (selectedGaleria.tamanho_usado_bytes / selectedGaleria.tamanho_alocado_bytes) > 0.9 ? 'red' : 'var(--color-mark)' 
-                       }} />
+                    <div >
+                       <div  />
                     </div>
                   </div>
                 )}
                 <button
                   onClick={handleOpenEditGaleria}
-                  className="btn-outline"
-                  style={{ padding: '0.6rem 1rem', fontSize: '0.85rem' }}
+                  
+                  
                 >
                   Editar Cota
                 </button>
                 <button
                   onClick={() => copyPublicLink(selectedGaleria.link_publico)}
-                  className="btn-mark"
+                  
                 >
                   <Copy size={16} /> Copiar Link do Cliente
                 </button>
