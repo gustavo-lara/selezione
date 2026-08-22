@@ -1,0 +1,1 @@
+ALTER TABLE galerias ADD COLUMN IF NOT EXISTS senha_hash VARCHAR(255);

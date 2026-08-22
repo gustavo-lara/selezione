@@ -1,4 +1,6 @@
-import { createGaleriaSchema, updateGaleriaSchema, updateGaleriaStatusSchema } from './galeria.validation.js';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import { createGaleriaSchema, updateGaleriaSchema, updateGaleriaStatusSchema, updateGaleriaPasswordSchema, clientAuthSchema } from './galeria.validation.js';
 import {
   createGaleria,
   getGaleriasByFotografo,
@@ -7,7 +9,8 @@ import {
   getGaleriaById,
   getGaleriaUsedSpace,
   updateGaleriaStorage,
-  updateGaleriaStatus
+  updateGaleriaStatus,
+  updateGaleriaPassword
 } from './galeria.service.js';
 import { deleteFotosFromStorageByGaleriaId } from '../fotos/foto.service.js';
 import { findFotografoById } from '../fotografos/fotografo.service.js';
@@ -67,6 +70,10 @@ export const getPublicBySlug = async (req, res) => {
     
     if (!galeria.is_active) {
       return res.status(403).json({ error: 'Galeria indisponível no momento' });
+    }
+
+    if (galeria.senha_hash) {
+      return res.status(200).json({ galeria: { isProtected: true, id: galeria.id, nome: galeria.nome, link_publico: galeria.link_publico } });
     }
 
     return res.status(200).json({ galeria });
@@ -156,5 +163,75 @@ export const updateStatus = async (req, res) => {
   } catch (error) {
      console.error('Erro ao atualizar status da galeria:', error);
      return res.status(500).json({ error: 'Erro interno ao atualizar status da galeria' });
+  }
+};
+
+export const updatePassword = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const fotografoId = req.user.id;
+    
+    const validation = updateGaleriaPasswordSchema.safeParse(req.body);
+    if (!validation.success) {
+      return res.status(400).json({ error: 'Dados inválidos', details: validation.error.errors.map(e => e.message) });
+    }
+
+    const { password } = validation.data;
+
+    const galeria = await getGaleriaById(id, fotografoId);
+    if (!galeria) return res.status(404).json({ error: 'Galeria não encontrada' });
+
+    let senhaHash = null;
+    if (password && password.trim() !== '') {
+      senhaHash = await bcrypt.hash(password, 10);
+    }
+
+    await updateGaleriaPassword(id, fotografoId, senhaHash);
+    
+    return res.status(200).json({ message: 'Senha da galeria atualizada' });
+  } catch (error) {
+     console.error('Erro ao atualizar senha da galeria:', error);
+     return res.status(500).json({ error: 'Erro interno ao atualizar senha da galeria' });
+  }
+};
+
+export const authenticateClient = async (req, res) => {
+  try {
+    const { slug } = req.params;
+    const validation = clientAuthSchema.safeParse(req.body);
+    if (!validation.success) {
+      return res.status(400).json({ error: 'Dados inválidos', details: validation.error.errors.map(e => e.message) });
+    }
+
+    const { password } = validation.data;
+    const galeria = await getGaleriaBySlug(slug);
+
+    if (!galeria) {
+      return res.status(404).json({ error: 'Galeria não encontrada' });
+    }
+
+    if (!galeria.is_active) {
+      return res.status(403).json({ error: 'Galeria indisponível no momento' });
+    }
+
+    if (!galeria.senha_hash) {
+      return res.status(400).json({ error: 'Esta galeria não possui proteção por senha' });
+    }
+
+    const isValid = await bcrypt.compare(password, galeria.senha_hash);
+    if (!isValid) {
+      return res.status(401).json({ error: 'Senha incorreta' });
+    }
+
+    const token = jwt.sign(
+      { galeriaId: galeria.id, role: 'client' },
+      process.env.JWT_SECRET || 'fallback_secret_key',
+      { expiresIn: '7d' }
+    );
+
+    return res.status(200).json({ token });
+  } catch (error) {
+    console.error('Erro ao autenticar cliente:', error);
+    return res.status(500).json({ error: 'Erro interno ao autenticar' });
   }
 };

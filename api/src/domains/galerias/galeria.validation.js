@@ -19,3 +19,11 @@ export const updateGaleriaSchema = z.object({
 export const updateGaleriaStatusSchema = z.object({
   isActive: z.boolean({ required_error: 'O status de visibilidade é obrigatório' })
 });
+
+export const updateGaleriaPasswordSchema = z.object({
+  password: z.string().optional()
+});
+
+export const clientAuthSchema = z.object({
+  password: z.string({ required_error: 'A senha é obrigatória' }).min(1, 'A senha não pode estar vazia')
+});

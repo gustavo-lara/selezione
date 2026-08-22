@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Copy, Eye, EyeOff } from 'lucide-react';
+import { Copy, Eye, EyeOff, Lock } from 'lucide-react';
 import { http } from '../../services/http.js';
 import { useAuth } from '../../contexts/AuthContext.jsx';
 import { DashboardHeader } from './components/DashboardHeader/DashboardHeader.jsx';
@@ -7,6 +7,7 @@ import { Toast } from './components/Toast/Toast.jsx';
 import { GalleryList } from './components/GalleryList/GalleryList.jsx';
 import { GalleryCreateModal } from './components/GalleryCreateModal/GalleryCreateModal.jsx';
 import { GalleryEditModal } from './components/GalleryEditModal/GalleryEditModal.jsx';
+import { GalleryPasswordModal } from './components/GalleryPasswordModal/GalleryPasswordModal.jsx';
 import { SettingsModal } from './components/SettingsModal/SettingsModal.jsx';
 import { PhotoUploader } from './components/PhotoUploader/PhotoUploader.jsx';
 import { GalleryTabs } from './components/GalleryTabs/GalleryTabs.jsx';
@@ -33,6 +34,10 @@ export function PhotographerDashboard() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editCota, setEditCota] = useState(10);
   const [editing, setEditing] = useState(false);
+  
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+  const [editPassword, setEditPassword] = useState('');
+  const [savingPassword, setSavingPassword] = useState(false);
 
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [studioName, setStudioName] = useState(currentUser?.nome || '');
@@ -211,6 +216,38 @@ export function PhotographerDashboard() {
     }
   };
 
+  const handleOpenPasswordModal = () => {
+    if (!selectedGaleria) return;
+    setEditPassword(selectedGaleria.senha_hash ? '********' : '');
+    setIsPasswordModalOpen(true);
+  };
+
+  const handleSavePassword = async (e) => {
+    e.preventDefault();
+    if (!selectedGaleria) return;
+
+    // Se o valor for exatamente os asteriscos e já tinha senha,
+    // significa que o usuário não alterou nada.
+    if (selectedGaleria.senha_hash && editPassword === '********') {
+      setIsPasswordModalOpen(false);
+      return;
+    }
+
+    setSavingPassword(true);
+    try {
+      await http.patch(`/api/galerias/${selectedGaleria.id}/password`, { password: editPassword });
+      showToast('Senha da galeria atualizada com sucesso!');
+      setIsPasswordModalOpen(false);
+      fetchGalerias();
+    } catch (err) {
+      console.error('Erro ao atualizar senha:', err);
+      const msg = err.response?.data?.error || 'Falha ao atualizar a senha.';
+      alert(msg);
+    } finally {
+      setSavingPassword(false);
+    }
+  };
+
   const handleFileUpload = async (e) => {
     const files = Array.from(e.target.files);
     if (!files || files.length === 0 || !selectedGaleria) return;
@@ -378,6 +415,12 @@ export function PhotographerDashboard() {
                   Editar Cota
                 </button>
                 <button
+                  onClick={handleOpenPasswordModal}
+                  style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'transparent', color: 'var(--color-ink)', padding: '0.5rem 1rem', borderRadius: '4px', border: '1px solid var(--color-warm-grey-light)', cursor: 'pointer', transition: 'all 0.2s' }}
+                >
+                  <Lock size={16} /> Senha
+                </button>
+                <button
                   onClick={() => copyPublicLink(selectedGaleria.link_publico)}
                   
                 >
@@ -434,6 +477,16 @@ export function PhotographerDashboard() {
         onSubmit={handleEditGaleria}
         onClose={() => setIsEditModalOpen(false)}
         formatBytes={formatBytes}
+      />
+
+      <GalleryPasswordModal
+        isOpen={isPasswordModalOpen}
+        galeria={selectedGaleria}
+        novaSenha={editPassword}
+        saving={savingPassword}
+        onChangeSenha={(e) => setEditPassword(e.target.value)}
+        onSubmit={handleSavePassword}
+        onClose={() => setIsPasswordModalOpen(false)}
       />
 
           <SettingsModal

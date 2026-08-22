@@ -33,8 +33,9 @@ Este documento é a "fonte da verdade" do comportamento atual e servirá de base
 *   **Status de Fluxo:** Não há um estado de "Finalizada/Fechada". O cliente sempre pode alterar a seleção.
 
 ### 2.3. Acesso e Privacidade
-*   O acesso do cliente ocorre exclusivamente pela posse do `link_publico`.
-*   A API não implementa suporte a senhas para proteger galerias. A privacidade baseia-se unicamente em esconder a URL.
+*   O acesso do cliente ocorre pela posse do `link_publico`.
+*   **Privacidade Flexível (Senhas):** A API suporta proteção de galerias por senha. O fotógrafo pode definir uma senha que é armazenada como hash (`bcrypt`). Ao acessar, o cliente deve fornecer a senha correta para receber um token JWT (salvo no `sessionStorage`) que libera o acesso àquela galeria.
+*   **Controle de Visibilidade:** O fotógrafo pode definir a galeria como "Disponível" ou "Privada" (toggle `is_active`). Se Privada, o acesso é totalmente bloqueado, mesmo se o cliente tiver o link e a senha corretos.
 
 ---
 
@@ -77,4 +78,4 @@ Este documento é a "fonte da verdade" do comportamento atual e servirá de base
 
 ---
 
-> **Direcionamento Estratégico (SaaS Freemium):** A fundação para o modelo SaaS Freemium começou a ser aplicada com a gestão de cota de armazenamento global da conta e a alocação de espaço por galeria. Próximos passos incluem processamento de Thumbnails leves + Marca D'água para proteção, Galeria Protegida por Senha, Criação de Pacotes com limites de escolha explícitos e o Botão de Finalizar Seleção com alertas.
+> **Direcionamento Estratégico (SaaS Freemium):** A fundação para o modelo SaaS Freemium começou a ser aplicada com a gestão de cota de armazenamento global da conta, alocação de espaço por galeria, controle de visibilidade (Disponível/Privada) e Privacidade Flexível (Galeria Protegida por Senha). Próximos passos incluem processamento de Thumbnails leves + Marca D'água para proteção, Criação de Pacotes com limites de escolha explícitos e o Botão de Finalizar Seleção com alertas.

@@ -20,6 +20,10 @@ export function PublicGallery() {
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
+  const [password, setPassword] = useState('');
+  const [authError, setAuthError] = useState('');
+  const [authenticating, setAuthenticating] = useState(false);
+
   useEffect(() => {
     if (slug) {
       fetchPublicData();
@@ -31,19 +35,48 @@ export function PublicGallery() {
     setError('');
     try {
       const galeriaRes = await http.get(`/api/galerias/public/${slug}`);
-      setGaleria(galeriaRes.data.galeria);
+      const galeriaData = galeriaRes.data.galeria;
+      setGaleria(galeriaData);
 
-      const fotosRes = await http.get(`/api/public/${slug}/fotos`);
+      const token = sessionStorage.getItem(`clientToken_${slug}`);
+      
+      if (galeriaData.isProtected && !token) {
+         setLoading(false);
+         return;
+      }
+
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+      const fotosRes = await http.get(`/api/public/${slug}/fotos`, { headers });
       setFotos(fotosRes.data.fotos || []);
     } catch (err) {
       console.error('Erro ao carregar galeria pública:', err);
       if (err.response && err.response.status === 403) {
         setError('Esta galeria está indisponível no momento.');
+      } else if (err.response && err.response.status === 401) {
+        sessionStorage.removeItem(`clientToken_${slug}`);
+        setGaleria(prev => prev ? { ...prev, isProtected: true } : { isProtected: true });
+        setLoading(false);
+        return;
       } else {
         setError('Galeria não encontrada ou link inválido.');
       }
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleAuthenticate = async (e) => {
+    e.preventDefault();
+    setAuthenticating(true);
+    setAuthError('');
+    try {
+      const res = await http.post(`/api/galerias/public/${slug}/auth`, { password });
+      sessionStorage.setItem(`clientToken_${slug}`, res.data.token);
+      await fetchPublicData();
+    } catch (err) {
+      setAuthError(err.response?.data?.error || 'Senha incorreta');
+    } finally {
+      setAuthenticating(false);
     }
   };
 
@@ -57,7 +90,9 @@ export function PublicGallery() {
     );
 
     try {
-      const res = await http.post(`/api/fotos/${fotoId}/selecao`);
+      const token = sessionStorage.getItem(`clientToken_${slug}`);
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+      const res = await http.post(`/api/fotos/${fotoId}/selecao`, {}, { headers });
       const updatedSelecao = res.data.selecao;
       setFotos(prevFotos =>
         prevFotos.map(f =>
@@ -107,6 +142,30 @@ export function PublicGallery() {
         <button onClick={() => navigate('/')} >
           <ArrowLeft size={16} /> Voltar à Página Inicial
         </button>
+      </div>
+    );
+  }
+
+  if (galeria?.isProtected && !sessionStorage.getItem(`clientToken_${slug}`)) {
+    return (
+      <div>
+        <h2>Galeria Protegida</h2>
+        <p>Esta galeria requer uma senha para ser acessada.</p>
+        <form onSubmit={handleAuthenticate}>
+          <input 
+            type="password" 
+            placeholder="Digite a senha" 
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          {authError && <span>{authError}</span>}
+          <button 
+            type="submit" 
+            disabled={authenticating}
+          >
+            {authenticating ? 'Verificando...' : 'Acessar Galeria'}
+          </button>
+        </form>
       </div>
     );
   }
