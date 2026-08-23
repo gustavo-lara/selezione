@@ -41,6 +41,7 @@ export function DashboardHome() {
     });
   }, []);
 
+
   const fetchGalerias = async () => {
     setLoading(true);
     try {
@@ -125,6 +126,12 @@ export function DashboardHome() {
     setNovaCota(Math.min(10, Math.max(1, maxPossivel)));
     setIsModalOpen(true);
   };
+
+  useEffect(() => {
+    const handleOpenModalEvent = () => handleOpenCreateModal();
+    window.addEventListener('openNewGalleryModal', handleOpenModalEvent);
+    return () => window.removeEventListener('openNewGalleryModal', handleOpenModalEvent);
+  }, [armazenamentoLivreBytes]);
 
   if (initialLoading) {
     return <LoadingScreen message="Carregando suas galerias..." />;
